@@ -1,0 +1,3 @@
+{
+    "mongo": "mongodb://localhost:27017/raaay-blog-dev"
+}

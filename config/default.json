@@ -1,3 +1,9 @@
 {
-    "mongo": "mongodb://localhost:27017/raaay-blog-n"
+    "mongo": "mongodb://localhost:27017/raaay-blog",
+    "secret": "seecreet",
+
+    "admin": {
+        "username": "admin",
+        "password": "password"
+    }
 }

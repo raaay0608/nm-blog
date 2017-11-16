@@ -7,9 +7,12 @@ import KoaStatic from 'koa-static'
 import KoaJson from 'koa-json'
 import KoaLogger from 'koa-logger'
 import KoaOnError from 'koa-onerror'
+import KoaJWT from 'koa-jwt'
 
-import router from '~/routes/index'
-import db from '@/models'
+import auth from '~/middlewares/auth'
+import indexRouter from '~/routes/index'
+import tokenRouter from '~/routes/token'
+import * as db from '~/models'
 
 export const app = new Koa()
 export default app
@@ -21,6 +24,9 @@ KoaOnError(app)
 app.use(KoaBody())
 app.use(KoaLogger())
 app.use(KoaJson())
+app.use(KoaJWT({ secret: config.get('secret'), passthrough: true }))
+
+app.use(auth)
 
 // static files
 app.use(KoaStatic(path.join(__dirname, 'public')))
@@ -29,7 +35,8 @@ app.use(KoaStatic(path.join(__dirname, 'public')))
 app.use(KoaViews(path.join(__dirname, 'views'), {extension: 'ejs'}))
 
 // routes
-app.use(router.routes(), router.allowedMethods())
+app.use(indexRouter.routes(), indexRouter.allowedMethods())
+app.use(tokenRouter.routes(), tokenRouter.allowedMethods())
 
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
