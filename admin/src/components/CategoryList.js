@@ -1,12 +1,61 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+import * as CategoryApi from '../api/category'
 
-export class Index extends Component {
+export class CategoryList extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      categories: [] // { _id, name, description, preference }
+    }
+  }
+
+  componentWillMount () {
+    this.fetchCategories()
+  }
+
   render () {
     return (
-      <h1>CategoryList</h1>
+      <div className="CategoryList">
+        <div className="container">
+
+          <table className="table">
+            <caption>List of categories</caption>
+
+            <thead className="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Preference</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {this.state.categories.map((category) =>
+                <tr key={category._id}>
+                  <th scope="row">{category._id}</th>
+                  <td>{category.name}</td>
+                  <td>{category.preference}</td>
+                </tr>
+              )}
+            </tbody>
+
+          </table>
+
+        </div>
+      </div>
     )
+  }
+
+  fetchCategories () {
+    CategoryApi.getCategories()
+      .then(categories => {
+        this.setState({categories: categories})
+      })
+      .catch(err => {
+        alert(err)
+      })
   }
 }
 
-export default Index
+export default CategoryList

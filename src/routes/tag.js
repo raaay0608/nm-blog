@@ -1,12 +1,14 @@
 import KoaRouter from 'koa-router'
 
-import Tag from '~/models/tag' // eslint-disable-line no-unused-vars
+import Tag from '~/models/tag'
 
 export const router = new KoaRouter()
 
 router.get('/tags', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
+      let tags = await Tag.list()
+      ctx.body = tags
       break
     case 'html':
       break

@@ -2,10 +2,12 @@
 import React, { Component } from 'react'
 import * as PostApi from '../api/post'
 
-export class Index extends Component {
+export class PostList extends Component {
   constructor (props) {
     super(props)
-    this.state = { posts: [] }
+    this.state = {
+      posts: []
+    }
   }
 
   componentWillMount () {
@@ -16,14 +18,17 @@ export class Index extends Component {
     return (
       <div className="PostList">
         <div className="container">
+
           <table className="table">
             <caption>List of posts</caption>
+
             <thead className="thead-light">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Title</th>
               </tr>
             </thead>
+
             <tbody>
               {this.state.posts.map((post) =>
                 <tr key={post._id}>
@@ -32,7 +37,9 @@ export class Index extends Component {
                 </tr>
               )}
             </tbody>
+
           </table>
+
         </div>
       </div>
     )
@@ -45,9 +52,8 @@ export class Index extends Component {
       })
       .catch(err => {
         alert(err)
-        console.error(err)
       })
   }
 }
 
-export default Index
+export default PostList

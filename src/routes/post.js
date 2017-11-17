@@ -7,7 +7,7 @@ export const router = new KoaRouter()
 router.get('/posts', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
-      const posts = await Post.findMultiple()
+      const posts = await Post.list()
       ctx.body = posts
       break
     case 'html':

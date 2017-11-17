@@ -1,8 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import ReactDOM from 'react-dom'
 import registerServiceWorker from './registerServiceWorker'
 
-import './index.css'
 import './include/bootstrap'
 import App from './App'
 

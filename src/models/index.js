@@ -62,7 +62,7 @@ export class Model {
 
   // common query functions
 
-  static findMultiple (filter) {
+  static list (filter) {
     return this.collection.find(filter).toArray()
   }
 

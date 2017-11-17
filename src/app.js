@@ -14,6 +14,8 @@ import auth from '~/middlewares/auth'
 import indexRouter from '~/routes/index'
 import tokenRouter from '~/routes/token'
 import postRouter from '~/routes/post'
+import categoryRouter from '~/routes/category'
+import tagRouter from '~/routes/tag'
 import * as db from '~/models'
 
 export const app = new Koa()
@@ -41,6 +43,8 @@ app.use(KoaViews(path.join(__dirname, 'views'), {extension: 'ejs'}))
 app.use(indexRouter.routes(), indexRouter.allowedMethods())
 app.use(tokenRouter.routes(), tokenRouter.allowedMethods())
 app.use(postRouter.routes(), postRouter.allowedMethods())
+app.use(categoryRouter.routes(), categoryRouter.allowedMethods())
+app.use(tagRouter.routes(), tagRouter.allowedMethods())
 
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)

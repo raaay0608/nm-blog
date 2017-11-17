@@ -7,6 +7,8 @@ export const router = new KoaRouter()
 router.get('/categories', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
+      let categories = await Category.list()
+      ctx.body = categories
       break
     case 'html':
       break

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 
-export class Index extends Component {
+export class Post extends Component {
   render () {
     return (
       <h1>Post</h1>
@@ -9,4 +9,4 @@ export class Index extends Component {
   }
 }
 
-export default Index
+export default Post
