@@ -1,3 +1,4 @@
+const urlBase = 'http://localhost:8000' // TODO
 
 const baseHeaders = new Headers({
   'Content-Type': 'application/json',
@@ -27,8 +28,8 @@ function handleErrors (response) {
 }
 
 // Return URL object
-function urlWithQueires (baseURL, queries = {}) {
-  const _url = new URL(baseURL)
+function urlWithQueires (url, queries = {}) {
+  const _url = new URL(urlBase + url)
   Object.keys(queries).forEach(key => _url.searchParams.append(key, queries[key]))
   return _url
 }

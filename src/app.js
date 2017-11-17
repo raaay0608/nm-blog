@@ -8,6 +8,7 @@ import KoaJson from 'koa-json'
 import KoaLogger from 'koa-logger'
 import KoaOnError from 'koa-onerror'
 import KoaJWT from 'koa-jwt'
+import cors from '@koa/cors'
 
 import auth from '~/middlewares/auth'
 import indexRouter from '~/routes/index'
@@ -25,6 +26,7 @@ KoaOnError(app)
 app.use(KoaBody())
 app.use(KoaLogger())
 app.use(KoaJson())
+app.use(cors())
 app.use(KoaJWT({ secret: config.get('secret'), passthrough: true }))
 
 app.use(auth)
@@ -47,7 +49,7 @@ app.on('error', (err, ctx) => {
 db.connect(config.get('mongo'))
   .then(conn => {
     console.log(`Server Starts`)
-    app.listen('3000')
+    app.listen('8000')
   })
   .catch(err => {
     console.log('Db connection error')
