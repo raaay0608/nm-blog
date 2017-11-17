@@ -1,5 +1,7 @@
 import KoaRouter from 'koa-router'
 
+import Category from '~/models/category' // eslint-disable-line no-unused-vars
+
 export const router = new KoaRouter()
 
 router.get('/categories', async function (ctx, next) {

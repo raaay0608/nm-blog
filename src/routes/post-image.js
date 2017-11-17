@@ -1,5 +1,7 @@
 import KoaRouter from 'koa-router'
 
+import PostImage from '~/models/post-image' // eslint-disable-line no-unused-vars
+
 export const router = new KoaRouter()
 
 // get image list

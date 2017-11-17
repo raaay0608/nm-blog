@@ -12,6 +12,7 @@ import KoaJWT from 'koa-jwt'
 import auth from '~/middlewares/auth'
 import indexRouter from '~/routes/index'
 import tokenRouter from '~/routes/token'
+import postRouter from '~/routes/post'
 import * as db from '~/models'
 
 export const app = new Koa()
@@ -37,6 +38,7 @@ app.use(KoaViews(path.join(__dirname, 'views'), {extension: 'ejs'}))
 // routes
 app.use(indexRouter.routes(), indexRouter.allowedMethods())
 app.use(tokenRouter.routes(), tokenRouter.allowedMethods())
+app.use(postRouter.routes(), postRouter.allowedMethods())
 
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)

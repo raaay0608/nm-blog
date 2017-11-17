@@ -1,5 +1,7 @@
 import KoaRouter from 'koa-router'
 
+import Tag from '~/models/tag' // eslint-disable-line no-unused-vars
+
 export const router = new KoaRouter()
 
 router.get('/tags', async function (ctx, next) {

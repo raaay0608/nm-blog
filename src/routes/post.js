@@ -1,5 +1,7 @@
 import KoaRouter from 'koa-router'
 
+import Post from '~/models/post' // eslint-disable-line no-unused-vars
+
 export const router = new KoaRouter()
 
 router.get('/posts', async function (ctx, next) {
