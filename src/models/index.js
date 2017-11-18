@@ -88,6 +88,7 @@ export class Model {
   }
 
   static async insertOne (doc, options) {
+    // return {n: 1, ok: 1}
     return this.collection.insertOne(doc, options)
   }
 

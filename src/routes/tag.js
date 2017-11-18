@@ -20,6 +20,9 @@ router.get('/tags', async function (ctx, next) {
 router.post('/tags', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
+      let data = ctx.request.body
+      let res = await Tag.insertOne(data)
+      ctx.body = res // TODO: return tag info, not insert result
       break
     default:
       ctx.throw(406)

@@ -50,7 +50,8 @@ const post = ({url, queries = {}, body = {}} = {}) => {
   body = JSON.stringify(body)
   const init = {
     method: 'POST',
-    headers: getHeaders()
+    headers: getHeaders(),
+    body: body
   }
   return fetch(url, init)
     .then(handleErrors)
@@ -62,7 +63,8 @@ const put = ({url, queries = {}, body = {}} = {}) => {
   body = JSON.stringify(body)
   const init = {
     method: 'PUT',
-    headers: getHeaders()
+    headers: getHeaders(),
+    body: body
   }
   return fetch(url, init)
     .then(handleErrors)
@@ -74,7 +76,8 @@ const patch = ({url, queries = {}, body = {}} = {}) => {
   body = JSON.stringify(body)
   const init = {
     method: 'PATCH',
-    headers: getHeaders()
+    headers: getHeaders(),
+    body: body
   }
   return fetch(url, init)
     .then(handleErrors)

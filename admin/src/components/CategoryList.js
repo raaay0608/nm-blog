@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+import { Button, Table } from 'reactstrap'
 import * as CategoryApi from '../api/category'
 
 export class CategoryList extends Component {
@@ -17,11 +18,14 @@ export class CategoryList extends Component {
   render () {
     return (
       <div className="CategoryList">
-        <div className="container">
+        <div className="container content">
 
-          <table className="table">
+          <div className="button-area">
+            <Button block>New Category</Button>
+          </div>
+
+          <Table>
             <caption>List of categories</caption>
-
             <thead className="thead-light">
               <tr>
                 <th scope="col">#</th>
@@ -29,7 +33,6 @@ export class CategoryList extends Component {
                 <th scope="col">Preference</th>
               </tr>
             </thead>
-
             <tbody>
               {this.state.categories.map((category) =>
                 <tr key={category._id}>
@@ -39,8 +42,7 @@ export class CategoryList extends Component {
                 </tr>
               )}
             </tbody>
-
-          </table>
+          </Table>
 
         </div>
       </div>

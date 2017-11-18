@@ -1,12 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+import { Button, Modal, Table } from 'reactstrap'
 import * as PostApi from '../api/post'
 
 export class PostList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      posts: []
+      posts: [],
+      modal: false
     }
   }
 
@@ -17,18 +19,20 @@ export class PostList extends Component {
   render () {
     return (
       <div className="PostList">
-        <div className="container">
+        <div className="container content">
 
-          <table className="table">
+          <div className="button-area">
+            <Button block>New Post</Button>
+          </div>
+
+          <Table>
             <caption>List of posts</caption>
-
             <thead className="thead-light">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Title</th>
               </tr>
             </thead>
-
             <tbody>
               {this.state.posts.map((post) =>
                 <tr key={post._id}>
@@ -37,8 +41,10 @@ export class PostList extends Component {
                 </tr>
               )}
             </tbody>
+          </Table>
 
-          </table>
+          <Modal isOpen={ this.state.modal }>
+          </Modal>
 
         </div>
       </div>
