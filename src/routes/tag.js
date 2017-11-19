@@ -7,7 +7,7 @@ export const router = new KoaRouter()
 router.get('/tags', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
-      let tags = await Tag.list()
+      const tags = await Tag.list()
       ctx.body = {
         tags: tags
       }
@@ -22,8 +22,8 @@ router.get('/tags', async function (ctx, next) {
 router.post('/tags', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
-      let data = ctx.request.body
-      let tag = await Tag.insertOneAndReturn(data)
+      const data = ctx.request.body
+      const tag = await Tag.create(data)
       ctx.body = {
         tag: tag
       }
@@ -36,6 +36,11 @@ router.post('/tags', async function (ctx, next) {
 router.get('/tags/:tagName', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
+      const tagName = ctx.params.tagName
+      const tag = await Tag.get({ name: tagName })
+      ctx.body = {
+        tag: tag
+      }
       break
     case 'html':
       break
@@ -47,6 +52,12 @@ router.get('/tags/:tagName', async function (ctx, next) {
 router.patch('/tags/:tagName', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
+      const tagName = ctx.params.tagName
+      const data = ctx.request.body
+      const tag = await Tag.modifyOne({ name: tagName }, data)
+      ctx.body = {
+        tag: tag
+      }
       break
     default:
       ctx.throw(406)
@@ -56,6 +67,11 @@ router.patch('/tags/:tagName', async function (ctx, next) {
 router.delete('/tags/:tagName', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
+      const tagName = ctx.params.tagName
+      const tag = await Tag.delete({ name: tagName })
+      ctx.body = {
+        tag: tag
+      }
       break
     default:
       ctx.throw(406)

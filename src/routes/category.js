@@ -22,6 +22,11 @@ router.get('/categories', async function (ctx, next) {
 router.post('/categories', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
+      const data = ctx.request.body
+      const category = await Category.create(data)
+      ctx.body = {
+        category: category
+      }
       break
     default:
       ctx.throw(406)
@@ -31,6 +36,11 @@ router.post('/categories', async function (ctx, next) {
 router.get('/categories/:categoryName', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
+      const categoryName = ctx.params.categoryName
+      const category = await Category.get({ name: categoryName })
+      ctx.body = {
+        category: category
+      }
       break
     case 'html':
       break
@@ -42,6 +52,12 @@ router.get('/categories/:categoryName', async function (ctx, next) {
 router.patch('/categories/:categoryName', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
+      const categoryName = ctx.params.categoryName
+      const data = ctx.request.body
+      const category = await Category.modifyOne({ name: categoryName }, data)
+      ctx.body = {
+        category: category
+      }
       break
     default:
       ctx.throw(406)
@@ -51,6 +67,11 @@ router.patch('/categories/:categoryName', async function (ctx, next) {
 router.delete('/categories/:categoryName', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
+      const categoryName = ctx.params.categoryName
+      const category = await Category.delete({ name: categoryName })
+      ctx.body = {
+        category: category
+      }
       break
     default:
       ctx.throw(406)

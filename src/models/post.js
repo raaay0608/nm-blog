@@ -18,7 +18,17 @@ const COLL_NAME = 'posts'
  */
 
 export class Post extends Model {
+  static async list () {
+    throw new Error('Model Function [Post.list] Not Implemented')
+  }
 
+  static async get (query) {
+    throw new Error('Model Function [Post.get] Not Implemented')
+  }
+
+  static async create (doc) {
+    throw new Error('Model Function [Post.create] Not Implemented')
+  }
 }
 
 Post.MODEL_NAME = MODEL_NAME
