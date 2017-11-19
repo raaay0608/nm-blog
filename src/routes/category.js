@@ -54,7 +54,7 @@ router.patch('/categories/:categoryName', async function (ctx, next) {
     case 'json':
       const categoryName = ctx.params.categoryName
       const data = ctx.request.body
-      const category = await Category.modifyOne({ name: categoryName }, data)
+      const category = await Category.modify({ name: categoryName }, data)
       ctx.body = {
         category: category
       }

@@ -7,13 +7,12 @@ import * as TagApi from '../api/tag'
 export class Tag extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       tags: [], // { _id, name }
-      modal: false,
-      newTagName: ''
+      newTagName: '',
+      modal: false
     }
-
-    this.handleNameTextChange = this.handleNameTextChange.bind(this)
   }
 
   componentWillMount () {
@@ -51,19 +50,21 @@ export class Tag extends Component {
             <ModalHeader toggle={() => this.toggleModal()}>
               New Tag
             </ModalHeader>
+
             <ModalBody>
               <Form>
                 <FormGroup>
                   <Label for="nameText">Name</Label>
                   <Input type="text" name="name" id="nameText"
                     value={this.state.newTagName}
-                    onChange={this.handleNameTextChange}
+                    onChange={(e) => this.setState({ newTagName: e.target.value })}
                   />
                 </FormGroup>
               </Form>
             </ModalBody>
+
             <ModalFooter>
-              <Button color="dark" onClick={() => this.handleClickOnCreate()}>Create</Button>
+              <Button color="dark" onClick={() => this.handleCreate()}>Create</Button>
               <Button color="secondary" onClick={() => this.toggleModal()}>Cancel</Button>
             </ModalFooter>
           </Modal>
@@ -99,11 +100,7 @@ export class Tag extends Component {
     })
   }
 
-  handleNameTextChange (event) {
-    this.setState({newTagName: event.target.value})
-  }
-
-  handleClickOnCreate () {
+  handleCreate () {
     this.createNewTag()
   }
 }

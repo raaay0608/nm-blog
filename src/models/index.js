@@ -1,3 +1,5 @@
+// TODO: Validation
+
 import Mongodb, { MongoClient } from 'mongodb' // eslint-disable-line no-unused-vars
 
 let _db = null

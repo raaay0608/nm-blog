@@ -6,6 +6,7 @@ import * as PostApi from '../api/post'
 export class PostList extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       posts: [],
       modal: false

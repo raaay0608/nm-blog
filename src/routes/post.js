@@ -54,7 +54,7 @@ router.patch('/posts/:postSlug', async function (ctx, next) {
     case 'json':
       const postSlug = ctx.params.postSlug
       const data = ctx.request.body
-      const post = await Post.modifyOne({ slug: postSlug }, data)
+      const post = await Post.modify({ slug: postSlug }, data)
       ctx.body = {
         post: post
       }

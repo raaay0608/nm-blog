@@ -10,7 +10,9 @@ const COLL_NAME = 'categories' // eslint-disable-line no-unused-vars
  */
 
 export class Category extends Model {
-
+  static async list (filter) {
+    return this.find(filter).sort({ preference: -1 }).toArray()
+  }
 }
 
 Category.MODEL_NAME = MODEL_NAME

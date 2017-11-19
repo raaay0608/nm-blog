@@ -54,7 +54,7 @@ router.patch('/tags/:tagName', async function (ctx, next) {
     case 'json':
       const tagName = ctx.params.tagName
       const data = ctx.request.body
-      const tag = await Tag.modifyOne({ name: tagName }, data)
+      const tag = await Tag.modify({ name: tagName }, data)
       ctx.body = {
         tag: tag
       }
