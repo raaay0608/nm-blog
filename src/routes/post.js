@@ -8,7 +8,9 @@ router.get('/posts', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
       const posts = await Post.list()
-      ctx.body = posts
+      ctx.body = {
+        posts: posts
+      }
       break
     case 'html':
       break

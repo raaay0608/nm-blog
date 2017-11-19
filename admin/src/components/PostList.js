@@ -51,14 +51,13 @@ export class PostList extends Component {
     )
   }
 
-  fetchPosts () {
-    let posts = PostApi.getPosts()
-      .then(posts => {
-        this.setState({posts: posts})
-      })
-      .catch(err => {
-        alert(err)
-      })
+  async fetchPosts () {
+    try {
+      const data = await PostApi.getPosts()
+      this.setState({posts: data.posts})
+    } catch (err) {
+      alert(err)
+    }
   }
 }
 

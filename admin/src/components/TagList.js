@@ -73,28 +73,24 @@ export class Tag extends Component {
     )
   }
 
-  fetchTags () {
-    TagApi.getTags()
-      .then(tags => {
-        this.setState({tags: tags})
-      })
-      .catch(err => {
-        alert(err)
-      })
+  async fetchTags () {
+    try {
+      const data = await TagApi.getTags()
+      this.setState({ tags: data.tags })
+    } catch (err) {
+      alert(err)
+    }
   }
 
-  createNewTag () {
-    const data = {
-      name: this.state.newTagName
+  async createNewTag () {
+    try {
+      const data = { name: this.state.newTagName }
+      const resData = await TagApi.createTag(data)
+      this.fetchTags()
+      this.toggleModal()
+    } catch (err) {
+      alert(err)
     }
-    TagApi.createTag(data)
-      .then(res => {
-        this.fetchTags()
-        this.toggleModal()
-      })
-      .catch(err => {
-        alert(err)
-      })
   }
 
   toggleModal () {

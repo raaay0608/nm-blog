@@ -49,14 +49,13 @@ export class CategoryList extends Component {
     )
   }
 
-  fetchCategories () {
-    CategoryApi.getCategories()
-      .then(categories => {
-        this.setState({categories: categories})
-      })
-      .catch(err => {
-        alert(err)
-      })
+  async fetchCategories () {
+    try {
+      const data = await CategoryApi.getCategories()
+      this.setState({categories: data.categories})
+    } catch (err) {
+      alert(err)
+    }
   }
 }
 

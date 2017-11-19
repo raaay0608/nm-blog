@@ -60,14 +60,28 @@ export class Model {
     return this.collection.deleteMany(filter, options)
   }
 
-  // common query functions
+  // customed functions for all models
 
-  static list (filter) {
+  /**
+   * Get all the docs which meet the filter
+   */
+  static async list (filter) {
     return this.collection.find(filter).toArray()
   }
 
-  // return cursor, remember ".toArray()"
+  /**
+   * Insert doc and renturn it
+   */
+  static async insertOneAndReturn (doc) {
+    const res = await this.insertOne(doc)
+    const _doc = res.ops[0]
+    return _doc
+  }
+
+  // MongoDB.collection methods below
+
   static find (query) {
+    // return cursor, remember ".toArray()"
     return this.collection.find(query)
   }
 

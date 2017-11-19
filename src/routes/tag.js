@@ -8,7 +8,9 @@ router.get('/tags', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
       let tags = await Tag.list()
-      ctx.body = tags
+      ctx.body = {
+        tags: tags
+      }
       break
     case 'html':
       break
@@ -21,8 +23,10 @@ router.post('/tags', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       let data = ctx.request.body
-      let res = await Tag.insertOne(data)
-      ctx.body = res // TODO: return tag info, not insert result
+      let tag = await Tag.insertOneAndReturn(data)
+      ctx.body = {
+        tag: tag
+      }
       break
     default:
       ctx.throw(406)
