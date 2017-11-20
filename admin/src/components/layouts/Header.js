@@ -6,7 +6,7 @@ export class Headbar extends Component {
   render () {
     return (
       <div className="Headbar">
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav className="navbar navbar-expand-md navbar-dark bg-dark">
           <div className="container">
 
             <Link to="/" className="navbar-brand">raaay's</Link>

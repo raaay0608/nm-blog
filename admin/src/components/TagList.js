@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter,
   Table, Form, FormGroup, Label, Col, Input } from 'reactstrap'
 import * as TagApi from '../api/tag'
@@ -40,7 +41,7 @@ export class Tag extends Component {
               {this.state.tags.map((tag) =>
                 <tr key={tag._id}>
                   <th scope="row">{tag._id}</th>
-                  <td>{tag.name}</td>
+                  <td><Link to={`/tags/${tag.name}`}>{tag.name}</Link></td>
                 </tr>
               )}
             </tbody>

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { HashRouter, Route } from 'react-router-dom'
+import { HashRouter, Route, Switch } from 'react-router-dom'
 
 import Index from './components/Index'
 import Login from './components/Login'
@@ -18,14 +18,25 @@ class App extends Component {
       <HashRouter>
         <div className="app">
           <Headbar/>
+
           <Route exact path="/" component={Index}/>
           <Route path="login" component={Login}/>
-          <Route path="/posts" component={PostList}/>
-          <Route path="/posts/:postSlug" component={Post}/>
-          <Route path="/categories" component={CategoryList}/>
-          <Route path="/categories/:categoryName" component={Category}/>
-          <Route path="/tags" component={TagList}/>
-          <Route path="/tags/:tagName" component={Tag}/>
+
+          <Switch>
+            <Route path="/posts/:postSlug" component={Post}/>
+            <Route path="/posts" component={PostList}/>
+          </Switch>
+
+          <Switch>
+            <Route path="/categories/:categoryName" component={Category}/>
+            <Route path="/categories" component={CategoryList}/>
+          </Switch>
+
+          <Switch>
+            <Route path="/tags/:tagName" component={Tag}/>
+            <Route path="/tags" component={TagList}/>
+          </Switch>
+
         </div>
       </HashRouter>
     )

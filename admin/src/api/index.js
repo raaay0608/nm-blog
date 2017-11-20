@@ -81,14 +81,14 @@ const patch = ({url, queries = {}, body = {}} = {}) => {
   }
   return fetch(url, init)
     .then(handleErrors)
-    .then(res => res.json)
+    .then(res => res.json())
 }
 
 // The DELETE request (should) may lead a reasponse 204 without body.
 const del = ({url, queries = {}} = {}) => {
   url = urlWithQueires(url, queries)
   const init = {
-    method: 'PATCH',
+    method: 'DELETE',
     headers: getHeaders()
   }
   return fetch(url, init)

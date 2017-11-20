@@ -1,4 +1,5 @@
 // TODO: Validation
+// TODO: Error Type
 
 import Mongodb, { MongoClient } from 'mongodb' // eslint-disable-line no-unused-vars
 
