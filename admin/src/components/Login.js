@@ -4,7 +4,11 @@ import React, { Component } from 'react'
 export class Login extends Component {
   render () {
     return (
-      <h1>Login</h1>
+      <div className="Login">
+        <div className="container content">
+          <h1>Login</h1>
+        </div>
+      </div>
     )
   }
 }

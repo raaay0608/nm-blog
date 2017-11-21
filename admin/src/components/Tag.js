@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
-import PropTypes from 'prop-types'
 
 import * as TagApi from '../api/tag'
 
@@ -18,25 +16,25 @@ export class Tag extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    this.fetchTag(nextProps.match.params.tagName)
-  }
-
   componentWillMount () {
     this.fetchTag(this.props.match.params.tagName)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.fetchTag(nextProps.match.params.tagName)
   }
 
   render () {
     return (
       <div className="Tag">
-        <div className="container">
+        <div className="container content">
 
           <Form>
             <FormGroup disabled>
               <Label for="idText">ID</Label>
               <Input disabled type="text" name="id" id="idText"
                 value={this.state.tag._id}
-                // onChange={(e) => { this.mergeAndSetState('tag', '_id', e.target.value) }}
+                onChange={(e) => { this.mergeAndSetState('tag', '_id', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
@@ -46,7 +44,8 @@ export class Tag extends Component {
                 onChange={(e) => { this.mergeAndSetState('tag', 'name', e.target.value) }}
               />
             </FormGroup>
-            <Button onClick={() => this.handleSave()}>Save</Button>
+            <Button outline color="primary" onClick={() => this.handleSave()}>Save</Button>&nbsp;
+            <Button outline color="danger" onClick={() => this.handleDelete()}>Remove</Button>
           </Form>
 
         </div>
@@ -77,6 +76,10 @@ export class Tag extends Component {
       name: this.state.tag.name
     }
     this.updateTag(tagName, data)
+  }
+
+  handleDelete () {
+    alert('Not implemented')
   }
 }
 

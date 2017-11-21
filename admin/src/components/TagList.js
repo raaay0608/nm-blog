@@ -65,8 +65,8 @@ export class Tag extends Component {
             </ModalBody>
 
             <ModalFooter>
-              <Button color="dark" onClick={() => this.handleCreate()}>Create</Button>
-              <Button color="secondary" onClick={() => this.toggleModal()}>Cancel</Button>
+              <Button outline color="primary" onClick={() => this.handleCreate()}>Create</Button>
+              <Button outline color="secondary" onClick={() => this.toggleModal()}>Cancel</Button>
             </ModalFooter>
           </Modal>
 

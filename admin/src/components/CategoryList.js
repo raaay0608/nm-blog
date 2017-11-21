@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter,
   Table, Form, FormGroup, Label, Col, Input } from 'reactstrap'
+
 import * as CategoryApi from '../api/category'
 
 export class CategoryList extends Component {
@@ -45,7 +47,7 @@ export class CategoryList extends Component {
               {this.state.categories.map((category) =>
                 <tr key={category._id}>
                   <th scope="row">{category._id}</th>
-                  <td>{category.name}</td>
+                  <td><Link to={`/categories/${category.name}`}>{category.name}</Link></td>
                   <td>{category.preference}</td>
                 </tr>
               )}
@@ -84,8 +86,8 @@ export class CategoryList extends Component {
             </ModalBody>
 
             <ModalFooter>
-              <Button color="dark" onClick={() => this.handleCreate()}>Create</Button>
-              <Button color="secondary" onClick={() => this.toggleModal()}>Cancel</Button>
+              <Button outline color="primary" onClick={() => this.handleCreate()}>Create</Button>
+              <Button outline color="secondary" onClick={() => this.toggleModal()}>Cancel</Button>
             </ModalFooter>
           </Modal>
 

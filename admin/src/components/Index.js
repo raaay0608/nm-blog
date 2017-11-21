@@ -5,7 +5,9 @@ export class Index extends Component {
   render () {
     return (
       <div className="Index">
-        <h1>Index</h1>
+        <div className="container content">
+          <h1>Index</h1>
+        </div>
       </div>
     )
   }
