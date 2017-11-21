@@ -13,6 +13,7 @@ export class CategoryList extends Component {
     this.state = {
       categories: [], // { _id, name, description, preference }
       newCategory: {
+        slug: '',
         name: '',
         description: '',
         preference: 0
@@ -39,6 +40,7 @@ export class CategoryList extends Component {
             <thead className="thead-light">
               <tr>
                 <th scope="col">#</th>
+                <th scope="col">Slug</th>
                 <th scope="col">Name</th>
                 <th scope="col">Preference</th>
               </tr>
@@ -46,9 +48,13 @@ export class CategoryList extends Component {
             <tbody>
               {this.state.categories.map((category) =>
                 <tr key={category._id}>
-                  <th scope="row">{category._id}</th>
-                  <td><Link to={`/categories/${category.name}`}>{category.name}</Link></td>
-                  <td>{category.preference}</td>
+                  <Link to={`/categories/${category.slug}`}>
+                    {/* TODO */}
+                    <th scope="row">{category._id}</th>
+                    <td>{category.slug}</td>
+                    <td>{category.name}</td>
+                    <td>{category.preference}</td>
+                  </Link>
                 </tr>
               )}
             </tbody>
@@ -61,6 +67,13 @@ export class CategoryList extends Component {
 
             <ModalBody>
               <Form>
+                <FormGroup>
+                  <Label for="slugText">slug</Label>
+                  <Input type="text" name="slug" id="slugText"
+                    value={this.state.newCategory.slug}
+                    onChange={(e) => { this.mergeAndSetState('newCategory', 'slug', e.target.value) }}
+                  />
+                </FormGroup>
                 <FormGroup>
                   <Label for="nameText">Name</Label>
                   <Input type="text" name="name" id="nameText"

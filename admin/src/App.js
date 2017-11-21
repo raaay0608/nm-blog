@@ -28,12 +28,12 @@ class App extends Component {
           </Switch>
 
           <Switch>
-            <Route path="/categories/:categoryName" component={Category}/>
+            <Route path="/categories/:categorySlug" component={Category}/>
             <Route path="/categories" component={CategoryList}/>
           </Switch>
 
           <Switch>
-            <Route path="/tags/:tagName" component={Tag}/>
+            <Route path="/tags/:tagSlug" component={Tag}/>
             <Route path="/tags" component={TagList}/>
           </Switch>
 

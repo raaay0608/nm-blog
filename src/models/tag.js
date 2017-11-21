@@ -4,6 +4,7 @@ const MODEL_NAME = 'Tag' // eslint-disable-line no-unused-vars
 const COLL_NAME = 'tags' // eslint-disable-line no-unused-vars
 
 /*
+ * slug {string} - required, unique, index
  * name {string} - required, unique, index
  */
 

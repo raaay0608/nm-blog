@@ -11,6 +11,7 @@ export class Category extends Component {
     this.state = {
       category: {
         _id: '',
+        slug: '',
         name: '',
         preference: 0,
         description: ''
@@ -19,11 +20,11 @@ export class Category extends Component {
   }
 
   componentWillMount () {
-    this.fetchCategory(this.props.match.params.categoryName)
+    this.fetchCategory(this.props.match.params.categorySlug)
   }
 
   componentWillReceiveProps (nextProps) {
-    this.fetchCategory(nextProps.match.params.categoryName)
+    this.fetchCategory(nextProps.match.params.categorySlug)
   }
 
   render () {
@@ -37,6 +38,13 @@ export class Category extends Component {
               <Input disabled type="text" name="id" id="idText"
                 value={this.state.category._id}
                 onChange={(e) => { this.mergeAndSetState('category', '_id', e.target.value) }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="slugText">Slug</Label>
+              <Input type="text" name="slug" id="slugText"
+                value={this.state.category.slug}
+                onChange={(e) => { this.mergeAndSetState('category', 'slug', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
@@ -76,37 +84,36 @@ export class Category extends Component {
     this.setState({[field]: data})
   }
 
-  async fetchCategory (categoryName) {
-    const res = await CategoryApi.getCategory(categoryName)
+  async fetchCategory (categorySlug) {
+    const res = await CategoryApi.getCategory(categorySlug)
     this.setState({category: res.category})
   }
 
-  async updateCategory (categoryName, data) {
-    const res = await CategoryApi.updateCategory(categoryName, data)
-    const newCategoryName = res.category.name
-    console.log(newCategoryName)
-    this.props.history.push(`/categories/${newCategoryName}`)
+  async updateCategory (categorySlug, data) {
+    const res = await CategoryApi.updateCategory(categorySlug, data)
+    const newCagetorySlug = res.category.slug
+    this.props.history.push(`/categories/${newCagetorySlug}`)
   }
 
-  async deleteCategory (categoryName) {
-    const res = await CategoryApi.deleteCategory(categoryName)
+  async deleteCategory (categorySlug) {
+    const res = await CategoryApi.deleteCategory(categorySlug)
     this.props.history.push(`/categories`)
   }
 
   handleSave () {
-    const categoryName = this.props.match.params.categoryName
+    const categorySlug = this.props.match.params.categorySlug
     const data = Object.assign({}, this.state.category)
     delete data._id
-    this.updateCategory(categoryName, data)
+    this.updateCategory(categorySlug, data)
   }
 
   handleDelete () {
-    const categoryName = this.props.match.params.categoryName
-    if (prompt(`Input category name "${categoryName}" to delete it`) !== categoryName) {
-      alert(`Input the currect tag name "${categoryName}" to delete it`)
+    const categorySlug = this.props.match.params.categorySlug
+    if (prompt(`Input category slug "${categorySlug}" to delete it`) !== categorySlug) {
+      alert(`Input the currect tag slug "${categorySlug}" to delete it`)
       return
     }
-    this.deleteCategory(categoryName)
+    this.deleteCategory(categorySlug)
   }
 }
 

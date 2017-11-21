@@ -10,8 +10,11 @@ export class Tag extends Component {
     super(props)
 
     this.state = {
-      tags: [], // { _id, name }
-      newTagName: '',
+      tags: [], // { _id, slug, name }
+      newTag: {
+        slug: '',
+        name: ''
+      },
       modal: false
     }
   }
@@ -34,14 +37,18 @@ export class Tag extends Component {
             <thead className="thead-light">
               <tr>
                 <th scope="col">#</th>
+                <th scope="col">Slug</th>
                 <th scope="col">Name</th>
               </tr>
             </thead>
             <tbody>
               {this.state.tags.map((tag) =>
                 <tr key={tag._id}>
-                  <th scope="row">{tag._id}</th>
-                  <td><Link to={`/tags/${tag.name}`}>{tag.name}</Link></td>
+                  <Link to={`/tags/${tag.slug}`}>
+                    <th scope="row">{tag._id}</th>
+                    <td>{tag.slug}</td>
+                    <td>{tag.name}</td>
+                  </Link>
                 </tr>
               )}
             </tbody>
@@ -55,10 +62,17 @@ export class Tag extends Component {
             <ModalBody>
               <Form>
                 <FormGroup>
+                  <Label for="slugText">Slug</Label>
+                  <Input type="text" name="slug" id="slugText"
+                    value={this.state.newTag.slug}
+                    onChange={(e) => this.mergeAndSetState('newTag', 'slug', e.target.value)}
+                  />
+                </FormGroup>
+                <FormGroup>
                   <Label for="nameText">Name</Label>
                   <Input type="text" name="name" id="nameText"
-                    value={this.state.newTagName}
-                    onChange={(e) => this.setState({ newTagName: e.target.value })}
+                    value={this.state.newTag.name}
+                    onChange={(e) => this.mergeAndSetState('newTag', 'name', e.target.value)}
                   />
                 </FormGroup>
               </Form>
@@ -75,6 +89,12 @@ export class Tag extends Component {
     )
   }
 
+  mergeAndSetState (field, key, val) {
+    const data = this.state[field]
+    data[key] = val
+    this.setState({[field]: data})
+  }
+
   async fetchTags () {
     try {
       const data = await TagApi.getTags()
@@ -84,9 +104,8 @@ export class Tag extends Component {
     }
   }
 
-  async createNewTag () {
+  async createNewTag (data) {
     try {
-      const data = { name: this.state.newTagName }
       const resData = await TagApi.createTag(data)
       this.fetchTags()
       this.toggleModal()
@@ -102,7 +121,8 @@ export class Tag extends Component {
   }
 
   handleCreate () {
-    this.createNewTag()
+    const data = this.state.newTag
+    this.createNewTag(data)
   }
 }
 

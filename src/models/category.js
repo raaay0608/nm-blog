@@ -4,6 +4,7 @@ const MODEL_NAME = 'Category' // eslint-disable-line no-unused-vars
 const COLL_NAME = 'categories' // eslint-disable-line no-unused-vars
 
 /*
+ * slug        {string} - required, unique, index
  * name        {string} - required, unique, index
  * description {string}
  * preference  {number} - required, default = 0

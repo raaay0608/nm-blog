@@ -33,11 +33,11 @@ router.post('/tags', async function (ctx, next) {
   }
 })
 
-router.get('/tags/:tagName', async function (ctx, next) {
+router.get('/tags/:tagSlug', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
-      const tagName = ctx.params.tagName
-      const tag = await Tag.get({ name: tagName })
+      const tagSlug = ctx.params.tagSlug
+      const tag = await Tag.get({ slug: tagSlug })
       ctx.body = {
         tag: tag
       }
@@ -49,12 +49,12 @@ router.get('/tags/:tagName', async function (ctx, next) {
   }
 })
 
-router.patch('/tags/:tagName', async function (ctx, next) {
+router.patch('/tags/:tagSlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
-      const tagName = ctx.params.tagName
+      const tagSlug = ctx.params.tagSlug
       const data = ctx.request.body
-      const tag = await Tag.modify({ name: tagName }, data)
+      const tag = await Tag.modify({ slug: tagSlug }, data)
       ctx.body = {
         tag: tag
       }
@@ -64,11 +64,11 @@ router.patch('/tags/:tagName', async function (ctx, next) {
   }
 })
 
-router.delete('/tags/:tagName', async function (ctx, next) {
+router.delete('/tags/:tagSlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
-      const tagName = ctx.params.tagName
-      const tag = await Tag.delete({ name: tagName })
+      const tagSlug = ctx.params.tagSlug
+      const tag = await Tag.delete({ slug: tagSlug })
       ctx.body = {
         tag: tag
       }

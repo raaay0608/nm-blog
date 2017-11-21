@@ -11,17 +11,18 @@ export class Tag extends Component {
     this.state = {
       tag: {
         _id: '',
+        slug: '',
         name: ''
       }
     }
   }
 
   componentWillMount () {
-    this.fetchTag(this.props.match.params.tagName)
+    this.fetchTag(this.props.match.params.tagSlug)
   }
 
   componentWillReceiveProps (nextProps) {
-    this.fetchTag(nextProps.match.params.tagName)
+    this.fetchTag(nextProps.match.params.tagSlug)
   }
 
   render () {
@@ -35,6 +36,13 @@ export class Tag extends Component {
               <Input disabled type="text" name="id" id="idText"
                 value={this.state.tag._id}
                 onChange={(e) => { this.mergeAndSetState('tag', '_id', e.target.value) }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="slugText">Slug</Label>
+              <Input type="text" name="slug" id="slugText"
+                value={this.state.tag.slug}
+                onChange={(e) => { this.mergeAndSetState('tag', 'slug', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
@@ -59,37 +67,36 @@ export class Tag extends Component {
     this.setState({[field]: data})
   }
 
-  async fetchTag (tagName) {
-    const res = await TagApi.getTag(tagName)
+  async fetchTag (tagSlug) {
+    const res = await TagApi.getTag(tagSlug)
     this.setState({tag: res.tag})
   }
 
-  async updateTag (tagName, data) {
-    const res = await TagApi.updateTag(tagName, data)
-    const newTagName = res.tag.name
-    this.props.history.push(`/tags/${newTagName}`)
+  async updateTag (tagSlug, data) {
+    const res = await TagApi.updateTag(tagSlug, data)
+    const newTagSlug = res.tag.slug
+    this.props.history.push(`/tags/${newTagSlug}`)
   }
 
-  async deleteTag (tagName) {
-    const res = await TagApi.deleteTag(tagName)
+  async deleteTag (tagSlug) {
+    const res = await TagApi.deleteTag(tagSlug)
     this.props.history.push(`/tags`)
   }
 
   handleSave () {
-    const tagName = this.props.match.params.tagName
-    const data = {
-      name: this.state.tag.name
-    }
-    this.updateTag(tagName, data)
+    const tagSlug = this.props.match.params.tagSlug
+    const data = this.state.tag
+    delete data['_id']
+    this.updateTag(tagSlug, data)
   }
 
   handleDelete () {
-    const tagName = this.props.match.params.tagName
-    if (prompt(`Input tag name "${tagName}" to delete it`) !== tagName) {
-      alert(`Input the currect tag name "${tagName}" to delete it`)
+    const tagSlug = this.props.match.params.tagSlug
+    if (prompt(`Input tag slug "${tagSlug}" to delete it`) !== tagSlug) {
+      alert(`Input the currect tag slug "${tagSlug}" to delete it`)
       return
     }
-    this.deleteTag(tagName)
+    this.deleteTag(tagSlug)
   }
 }
 

@@ -33,11 +33,11 @@ router.post('/categories', async function (ctx, next) {
   }
 })
 
-router.get('/categories/:categoryName', async function (ctx, next) {
+router.get('/categories/:categorySlug', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json':
-      const categoryName = ctx.params.categoryName
-      const category = await Category.get({ name: categoryName })
+      const categorySlug = ctx.params.categorySlug
+      const category = await Category.get({ slug: categorySlug })
       ctx.body = {
         category: category
       }
@@ -49,12 +49,12 @@ router.get('/categories/:categoryName', async function (ctx, next) {
   }
 })
 
-router.patch('/categories/:categoryName', async function (ctx, next) {
+router.patch('/categories/:categorySlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
-      const categoryName = ctx.params.categoryName
+      const categorySlug = ctx.params.categorySlug
       const data = ctx.request.body
-      const category = await Category.modify({ name: categoryName }, data)
+      const category = await Category.modify({ slug: categorySlug }, data)
       ctx.body = {
         category: category
       }
@@ -64,11 +64,11 @@ router.patch('/categories/:categoryName', async function (ctx, next) {
   }
 })
 
-router.delete('/categories/:categoryName', async function (ctx, next) {
+router.delete('/categories/:categorySlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
-      const categoryName = ctx.params.categoryName
-      const category = await Category.delete({ name: categoryName })
+      const categorySlug = ctx.params.categorySlug
+      const category = await Category.delete({ slug: categorySlug })
       ctx.body = {
         category: category
       }

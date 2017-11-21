@@ -6,8 +6,8 @@ const MODEL_NAME = 'Post'
 const COLL_NAME = 'posts'
 
 /*
- * title      {string} - required, unique(?), index
  * slug       {string} - required, unique, index
+ * title      {string} - required, unique(?), index
  * heroImage  {string} - not required, relative url, e.g. 'images/hero.jpg'
  * intro      {string} - not required
  * content    {string} - could be empty ''
