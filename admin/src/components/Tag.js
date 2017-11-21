@@ -70,6 +70,11 @@ export class Tag extends Component {
     this.props.history.push(`/tags/${newTagName}`)
   }
 
+  async deleteTag (tagName) {
+    const res = await TagApi.deleteTag(tagName)
+    this.props.history.push(`/tags`)
+  }
+
   handleSave () {
     const tagName = this.props.match.params.tagName
     const data = {
@@ -79,7 +84,12 @@ export class Tag extends Component {
   }
 
   handleDelete () {
-    alert('Not implemented')
+    const tagName = this.props.match.params.tagName
+    if (prompt(`Input tag name "${tagName}" to delete it`) !== tagName) {
+      alert(`Input the currect tag name "${tagName}" to delete it`)
+      return
+    }
+    this.deleteTag(tagName)
   }
 }
 

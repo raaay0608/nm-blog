@@ -18,6 +18,6 @@ export const updateTag = (TagName, body) => api.patch({
   body: body
 })
 
-export const removeTag = (TagName) => api.delete({
+export const deleteTag = (TagName) => api.delete({
   url: `/tags/${TagName}`
 })

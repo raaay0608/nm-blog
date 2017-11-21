@@ -81,16 +81,32 @@ export class Category extends Component {
     this.setState({category: res.category})
   }
 
-  async updateCategory () {
+  async updateCategory (categoryName, data) {
+    const res = await CategoryApi.updateCategory(categoryName, data)
+    const newCategoryName = res.category.name
+    console.log(newCategoryName)
+    this.props.history.push(`/categories/${newCategoryName}`)
+  }
 
+  async deleteCategory (categoryName) {
+    const res = await CategoryApi.deleteCategory(categoryName)
+    this.props.history.push(`/categories`)
   }
 
   handleSave () {
-    alert('Not implemented')
+    const categoryName = this.props.match.params.categoryName
+    const data = Object.assign({}, this.state.category)
+    delete data._id
+    this.updateCategory(categoryName, data)
   }
 
   handleDelete () {
-    alert('Not implemented')
+    const categoryName = this.props.match.params.categoryName
+    if (prompt(`Input category name "${categoryName}" to delete it`) !== categoryName) {
+      alert(`Input the currect tag name "${categoryName}" to delete it`)
+      return
+    }
+    this.deleteCategory(categoryName)
   }
 }
 

@@ -18,6 +18,6 @@ export const updateCategory = (categoryName, body) => api.patch({
   body: body
 })
 
-export const removeCategory = (categoryName) => api.delete({
+export const deleteCategory = (categoryName) => api.delete({
   url: `/categories/${categoryName}`
 })
