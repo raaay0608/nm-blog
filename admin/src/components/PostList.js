@@ -26,7 +26,7 @@ export class PostList extends Component {
             <Button block>New Post</Button>
           </div>
 
-          <Table>
+          <Table hover>
             <caption>List of posts</caption>
             <thead className="thead-light">
               <tr>
@@ -36,7 +36,7 @@ export class PostList extends Component {
             </thead>
             <tbody>
               {this.state.posts.map((post) =>
-                <tr key={post._id}>
+                <tr key={post.slug} onClick={() => this.props.history.push(`/posts/${post.slug}`)}>
                   <th scope="row">{post._id}</th>
                   <td>{post.title}</td>
                 </tr>

@@ -85,22 +85,37 @@ export class Category extends Component {
   }
 
   async fetchCategory (categorySlug) {
-    const res = await CategoryApi.getCategory(categorySlug)
-    this.setState({category: res.category})
+    try {
+      const res = await CategoryApi.getCategory(categorySlug)
+      this.setState({category: res.category})
+    } catch (err) {
+      alert(err)
+    }
   }
 
   async updateCategory (categorySlug, data) {
-    const res = await CategoryApi.updateCategory(categorySlug, data)
-    const newCagetorySlug = res.category.slug
-    this.props.history.push(`/categories/${newCagetorySlug}`)
+    try {
+      const res = await CategoryApi.updateCategory(categorySlug, data)
+      const newCagetorySlug = res.category.slug
+      this.props.history.push(`/categories/${newCagetorySlug}`)
+    } catch (err) {
+      alert(err)
+    }
   }
 
   async deleteCategory (categorySlug) {
-    const res = await CategoryApi.deleteCategory(categorySlug)
-    this.props.history.push(`/categories`)
+    try {
+      const res = await CategoryApi.deleteCategory(categorySlug)
+      this.props.history.push(`/categories`)
+    } catch (err) {
+      alert(err)
+    }
   }
 
   handleSave () {
+    if (!window.confirm('Confirm to update ?')) {
+      return
+    }
     const categorySlug = this.props.match.params.categorySlug
     const data = Object.assign({}, this.state.category)
     delete data._id
@@ -109,7 +124,7 @@ export class Category extends Component {
 
   handleDelete () {
     const categorySlug = this.props.match.params.categorySlug
-    if (prompt(`Input category slug "${categorySlug}" to delete it`) !== categorySlug) {
+    if (window.prompt(`Input category slug "${categorySlug}" to delete it`) !== categorySlug) {
       alert(`Input the currect tag slug "${categorySlug}" to delete it`)
       return
     }

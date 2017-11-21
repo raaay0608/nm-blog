@@ -68,22 +68,37 @@ export class Tag extends Component {
   }
 
   async fetchTag (tagSlug) {
-    const res = await TagApi.getTag(tagSlug)
-    this.setState({tag: res.tag})
+    try {
+      const res = await TagApi.getTag(tagSlug)
+      this.setState({tag: res.tag})
+    } catch (err) {
+      alert(err)
+    }
   }
 
   async updateTag (tagSlug, data) {
-    const res = await TagApi.updateTag(tagSlug, data)
-    const newTagSlug = res.tag.slug
-    this.props.history.push(`/tags/${newTagSlug}`)
+    try {
+      const res = await TagApi.updateTag(tagSlug, data)
+      const newTagSlug = res.tag.slug
+      this.props.history.push(`/tags/${newTagSlug}`)
+    } catch (err) {
+      alert(err)
+    }
   }
 
   async deleteTag (tagSlug) {
-    const res = await TagApi.deleteTag(tagSlug)
-    this.props.history.push(`/tags`)
+    try {
+      const res = await TagApi.deleteTag(tagSlug)
+      this.props.history.push(`/tags`)
+    } catch (err) {
+      alert(err)
+    }
   }
 
   handleSave () {
+    if (!window.confirm('Confirm to update ?')) {
+      return
+    }
     const tagSlug = this.props.match.params.tagSlug
     const data = this.state.tag
     delete data['_id']
@@ -92,7 +107,7 @@ export class Tag extends Component {
 
   handleDelete () {
     const tagSlug = this.props.match.params.tagSlug
-    if (prompt(`Input tag slug "${tagSlug}" to delete it`) !== tagSlug) {
+    if (window.prompt(`Input tag slug "${tagSlug}" to delete it`) !== tagSlug) {
       alert(`Input the currect tag slug "${tagSlug}" to delete it`)
       return
     }

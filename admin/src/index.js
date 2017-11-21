@@ -5,6 +5,7 @@ import registerServiceWorker from './registerServiceWorker'
 
 import './include/bootstrap'
 import './style/content.css'
+import './style/table.css'
 import App from './App'
 
 ReactDOM.render(<App />, document.getElementById('root'))

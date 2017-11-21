@@ -32,7 +32,7 @@ export class Tag extends Component {
             <Button block onClick={() => this.toggleModal()}>New Tag</Button>
           </div>
 
-          <Table>
+          <Table hover>
             <caption>List of tags</caption>
             <thead className="thead-light">
               <tr>
@@ -43,12 +43,10 @@ export class Tag extends Component {
             </thead>
             <tbody>
               {this.state.tags.map((tag) =>
-                <tr key={tag._id}>
-                  <Link to={`/tags/${tag.slug}`}>
-                    <th scope="row">{tag._id}</th>
-                    <td>{tag.slug}</td>
-                    <td>{tag.name}</td>
-                  </Link>
+                <tr key={tag.slug} onClick={() => this.props.history.push(`/tags/${tag.slug}`)}>
+                  <th scope="row">{tag._id}</th>
+                  <td>{tag.slug}</td>
+                  <td>{tag.name}</td>
                 </tr>
               )}
             </tbody>

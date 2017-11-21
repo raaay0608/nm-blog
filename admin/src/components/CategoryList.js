@@ -35,7 +35,7 @@ export class CategoryList extends Component {
             <Button block onClick={() => this.toggleModal()}>New Category</Button>
           </div>
 
-          <Table>
+          <Table hover>
             <caption>List of categories</caption>
             <thead className="thead-light">
               <tr>
@@ -47,14 +47,11 @@ export class CategoryList extends Component {
             </thead>
             <tbody>
               {this.state.categories.map((category) =>
-                <tr key={category._id}>
-                  <Link to={`/categories/${category.slug}`}>
-                    {/* TODO */}
-                    <th scope="row">{category._id}</th>
-                    <td>{category.slug}</td>
-                    <td>{category.name}</td>
-                    <td>{category.preference}</td>
-                  </Link>
+                <tr key={category.slug} onClick={() => this.props.history.push(`/categories/${category.slug}`)}>
+                  <th scope="row">{category._id}</th>
+                  <td>{category.slug}</td>
+                  <td>{category.name}</td>
+                  <td>{category.preference}</td>
                 </tr>
               )}
             </tbody>
