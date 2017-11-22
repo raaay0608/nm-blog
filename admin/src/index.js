@@ -4,8 +4,10 @@ import ReactDOM from 'react-dom'
 import registerServiceWorker from './registerServiceWorker'
 
 import './include/bootstrap'
+import './style/app.css'
 import './style/content.css'
 import './style/table.css'
+import './style/post-editor.css'
 import App from './App'
 
 ReactDOM.render(<App />, document.getElementById('root'))
