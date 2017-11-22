@@ -68,10 +68,8 @@ router.delete('/tags/:tagSlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       const tagSlug = ctx.params.tagSlug
-      const tag = await Tag.delete({ slug: tagSlug })
-      ctx.body = {
-        tag: tag
-      }
+      const res = await Tag.delete({ slug: tagSlug })
+      ctx.body = res
       break
     default:
       ctx.throw(406)

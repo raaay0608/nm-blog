@@ -1,7 +1,8 @@
-import { Model } from '~/models/index' // eslint-disable-line no-unused-vars
+import { Model } from '~/models/index'
+import Post from './post'
 
-const MODEL_NAME = 'Tag' // eslint-disable-line no-unused-vars
-const COLL_NAME = 'tags' // eslint-disable-line no-unused-vars
+const MODEL_NAME = 'Tag'
+const COLL_NAME = 'tags'
 
 /*
  * slug {string} - required, unique, index
@@ -10,8 +11,14 @@ const COLL_NAME = 'tags' // eslint-disable-line no-unused-vars
 
 class Tag extends Model {
   static async delete (filter) {
-    // TODO: remove the tag ref from posts
-    return super.delete(filter)
+    // TODO: cannot pull
+    const tag = await this.get(filter)
+    const posts = await Post.updateMany({ tags: tag._id }, { $pull: { tags: tag._id } })
+    const tagData = await super.delete(filter)
+    return {
+      tag: tagData,
+      posts: posts
+    }
   }
 }
 

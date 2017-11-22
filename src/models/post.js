@@ -1,6 +1,9 @@
+import MongoDB from 'mongodb'
 import { Model } from '~/models/index'
 import Category from '~/models/category' // eslint-disable-line no-unused-vars
 import Tag from '~/models/tag' // eslint-disable-line no-unused-vars
+
+const ObjectId = MongoDB.ObjectId
 
 const MODEL_NAME = 'Post'
 const COLL_NAME = 'posts'
@@ -22,22 +25,30 @@ export class Post extends Model {
     let [_category, _tags] = [null, []]
 
     if (doc.category) {
-      _category = await Category.get({ slug: doc.category })
+      _category = await Category.get({ $or: [
+        { _id: ObjectId.isValid(doc.category) ? ObjectId(doc.category) : null },
+        { slug: doc.category },
+        { name: doc.category }
+      ] })
     }
 
     if (doc.tags && doc.tags.length) {
       _tags = await Promise.all(doc.tags.map(tag => {
-        Tag.get({ slug: tag })
+        return Tag.get({ $or: [
+          { _id: ObjectId.isValid(tag) ? ObjectId(tag) : null },
+          { slug: tag },
+          { name: tag }
+        ]})
       }))
     }
 
     doc.category = _category._id
     doc.tags = _tags.map(tag => tag._id)
 
-    return super.create(doc)
+    const plainDoc = await super.create(doc)
+    return this.get({ _id: plainDoc._id })
   }
 
-  // TODO, ref with _id, not slug
   static async get (query = {}) {
     const cursor = await this.aggregate([
       { $match: query },
@@ -45,7 +56,7 @@ export class Post extends Model {
         {
           from: Category.COLL_NAME,
           localField: 'category',
-          foreignField: 'slug',
+          foreignField: '_id',
           as: 'category' // overwrite
         }
       },
@@ -58,7 +69,7 @@ export class Post extends Model {
         {
           from: Tag.COLL_NAME,
           localField: 'tags',
-          foreignField: 'slug',
+          foreignField: '_id',
           as: 'tags' // overwrite
         }
       }
@@ -66,7 +77,6 @@ export class Post extends Model {
     return cursor.next()
   }
 
-  // TODO, ref with _id, not slug
   static async list (filter = {}, {skip = 0, limit = 0} = {}) {
     const pipeline = [
       { $match: filter },
@@ -83,7 +93,7 @@ export class Post extends Model {
         {
           from: Category.COLL_NAME,
           localField: 'category',
-          foreignField: 'slug',
+          foreignField: '_id',
           as: 'category' // overwrite
         }
       },
@@ -96,14 +106,14 @@ export class Post extends Model {
         {
           from: Tag.COLL_NAME,
           localField: 'tags',
-          foreignField: 'slug',
+          foreignField: '_id',
           as: 'tags' // overwrite
         }
       }
     )
 
     const cursor = await this.aggregate(pipeline)
-    const res = cursor.toArray
+    const res = cursor.toArray()
     return res
   }
 }

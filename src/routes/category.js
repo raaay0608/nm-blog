@@ -68,10 +68,8 @@ router.delete('/categories/:categorySlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       const categorySlug = ctx.params.categorySlug
-      const category = await Category.delete({ slug: categorySlug })
-      ctx.body = {
-        category: category
-      }
+      const res = await Category.delete({ slug: categorySlug })
+      ctx.body = res
       break
     default:
       ctx.throw(406)

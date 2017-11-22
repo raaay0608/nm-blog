@@ -62,7 +62,11 @@ export class Model {
    * Same as `findOne`, to be overrided
    */
   static async get (query) {
-    return this.collection.findOne(query)
+    const doc = await this.collection.findOne(query)
+    if (!doc) {
+      throw new Error('Not found')
+    }
+    return doc
   }
 
   /**
@@ -78,6 +82,9 @@ export class Model {
    */
   static async modify (filter, update) {
     const res = await this.findOneAndUpdate(filter, { $set: update }, { returnOriginal: false })
+    if (!res.value) {
+      throw new Error('Not found')
+    }
     return res.value
   }
 
