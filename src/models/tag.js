@@ -9,7 +9,10 @@ const COLL_NAME = 'tags' // eslint-disable-line no-unused-vars
  */
 
 class Tag extends Model {
-
+  static async delete (filter) {
+    // TODO: remove the tag ref from posts
+    return super.delete(filter)
+  }
 }
 
 Tag.MODEL_NAME = MODEL_NAME

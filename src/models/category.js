@@ -14,6 +14,11 @@ export class Category extends Model {
   static async list (filter) {
     return this.find(filter).sort({ preference: -1 }).toArray()
   }
+
+  static async delete (filter) {
+    // TODO: remove the category ref from posts
+    return super.delete(filter)
+  }
 }
 
 Category.MODEL_NAME = MODEL_NAME
