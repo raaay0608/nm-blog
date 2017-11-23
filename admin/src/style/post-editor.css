@@ -6,7 +6,10 @@
   float: left;
   height: 100%;
   width: 20rem;
-  background-color: rgb(81, 81, 173);
+  padding: 1rem;
+  background-color: rgb(255, 255, 255);
+  overflow-y: scroll;
+  border: 1px solid #e9ecef;
 }
 
 .post-editor {
@@ -15,19 +18,29 @@
   height: 100%;
   display: flex;
   justify-content: space-between; /* ?? */
+  border: 1px solid #e9ecef;
+}
+
+textarea[name=content] {
+  resize: none;
 }
 
 .post-writing {
-  /* float: left; */
   width: 50%;
-  /* width: 3rem; */
   height: 100%;
-  background-color: #f77;
+  padding: 1rem;
+  background-color: rgb(255, 255, 244);    
+  overflow-y: scroll;
+  border: 1px solid #e9ecef;
+  font-family: "Monaco";
+  font-size: 0.9rem;  
 }
 
 .post-preview {
-  /* float: right; */
   width: 50%;
   height: 100%;
-  background-color: #bfb;  
+  padding: 1rem;
+  background-color: rgb(252, 252, 252);
+  overflow-y: scroll;
+  border: 1px solid #e9ecef;
 }
