@@ -1,7 +1,7 @@
 // TODO: Validation
 // TODO: Error Type
 
-import Mongodb, { MongoClient } from 'mongodb' // eslint-disable-line no-unused-vars
+import MongoDB, { MongoClient } from 'mongodb'
 
 let _db = null
 
@@ -173,5 +173,56 @@ export class FileModel {
 
   static get chunkCollection () {
     return this.db.collection(this.chunkCollectionName)
+  }
+
+  static get bucket () {
+    const options = {
+      bucketName: '',
+      chunkSizeBytes: 255 * 1024
+    }
+    let bucket = new MongoDB.GridFSBucket(this.db, options)
+    return bucket
+  }
+
+  static getUploadStream (contentType, metadata = {}) {
+    // use metadata.filename, not filename
+    return this.bucket.openUploadStream(null, {
+      contentType: contentType,
+      metadata: metadata
+    })
+  }
+
+  static getDownloadStreamById (id) {
+    return this.bucket.openDownloadStream(MongoDB.ObjectId(id))
+  }
+
+  static async getDownloadStreamByMetadata (metadata = {}) {
+    const fileNode = this.fileCollection.findOne({ metadata: metadata })
+    return this.getDownloadStreamById(fileNode._id)
+  }
+
+  static async getFileByMetadata (metadata) {
+    return this.fileCollection.findOne({metadata})
+  }
+
+  static async modifyFileInfo (filter, update) {
+    const options = { returnOriginal: false }
+    return this.fileCollection.findOneAndUpdate(filter, update, options)
+  }
+
+  static async deleteById (id) {
+    return this.bucket.delete(MongoDB.ObjectId(id))
+  }
+
+  static async deleteOneByMetadata (metadata = {}) {
+    const fileNode = await this.fileCollection.findOne({ metadata: metadata })
+    return this.deleteByIdById(fileNode._id)
+  }
+
+  static async deleteManyByMetadata (metadata = {}) {
+    const fileNodes = await this.fileCollection.find({ metadata: metadata }).toArray()
+    return Promise.all(fileNodes.map(fileNode => {
+      return this.bucket.delete(fileNode._id)
+    }))
   }
 }
