@@ -18,7 +18,7 @@
   height: 100%;
   display: flex;
   justify-content: space-between; /* ?? */
-  border: 1px solid #e9ecef;
+  /* border: 1px solid #e9ecef; */
 }
 
 textarea[name=content] {

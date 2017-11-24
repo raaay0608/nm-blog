@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
+import { Button, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap'
 import MarkdownIt from 'markdown-it'
 import TabOverride from 'taboverride'
 import Select from 'react-select'
@@ -9,12 +9,16 @@ import Datetime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
 
 import * as PostApi from '../api/post'
+import * as CategoryApi from '../api/category'
+import * as TagApi from '../api/tag'
 
 export class Post extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
+      tags: [],
+      categories: [],
       post: {
         category: {},
         content: '',
@@ -32,11 +36,15 @@ export class Post extends Component {
   }
 
   componentWillMount () {
+    this.fetchCategories()
+    this.fetchTags()
     this.fetchPost(this.props.match.params.postSlug)
   }
 
   componentWillReceiveProps (nextProps) {
-    this.fetchPost(this.props.match.params.postSlug)
+    this.fetchCategories()
+    this.fetchTags()
+    this.fetchPost(nextProps.match.params.postSlug)
   }
 
   componentDidMount () {
@@ -67,41 +75,66 @@ export class Post extends Component {
               <Label for="titleText">title</Label>
               <Input type="text" name="title" id="titleText"
                 value={this.state.post.title}
-                onChange={(e) => { this.mergeAndSetState('post', 'name', e.target.value) }}
+                onChange={(e) => { this.mergeAndSetState('post', 'title', e.target.value) }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="heroImageText">hero image</Label>
+              <Input type="text" name="heroImage" id="heroImageText"
+                value={this.state.post.heroImage}
+                onChange={(e) => { this.mergeAndSetState('post', 'heroImage', e.target.value) }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="introText">intro</Label>
+              <Input type="textarea" name="intro" id="introText"
+                value={this.state.post.intro}
+                onChange={(e) => { this.mergeAndSetState('post', 'intro', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
               <Label for="categorySelect">date</Label>
               <Datetime
                 value={this.state.post.date}
+                onChange={(datetime) => this.mergeAndSetState('post', 'date', datetime)}
               />
             </FormGroup>
             <FormGroup>
               <Label for="categorySelect">category</Label>
               <Select
-                name="category"
-                value={this.state.value}
-                onChange={this.handleChange}
-                options={[
-                  { value: 'one', label: 'One' },
-                  { value: 'two', label: 'Two' }
-                ]}
+                name={'category'}
+                value={this.state.post.category ? this.state.post.category.slug : null}
+                onChange={(valueLabel) => this.handleCategorySelectChange(valueLabel)}
+                options={this.categoryOptions}
               />
             </FormGroup>
             <FormGroup>
               <Label for="tagSelect">tags</Label>
               <Select
-                name="tags"
+                name={'tags'}
                 multi={true}
-                value={{ value: 'one', label: 'One' }}
-                onChange={this.handleChange}
+                value={this.state.post.tags.map(tag => tag.slug)}
+                onChange={(valueLabel) => this.handleTagSelectChange(valueLabel)}
+                options={this.tagOptions}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="categorySelect">category</Label>
+              <Select
+                name={'category'}
+                clearable={false}
                 options={[
-                  { value: 'one', label: 'One' },
-                  { value: 'two', label: 'Two' }
+                  { value: 'draft', label: 'Draft' },
+                  { value: 'published', label: 'Published' }
                 ]}
+                value={this.state.post.state}
+                onChange={(valueLabel) => this.mergeAndSetState('post', 'state', valueLabel.value)}
               />
             </FormGroup>
           </Form>
+          <Button block outline color="primary" onClick={() => this.handleSave()}>Save</Button>
+          <Button block outline color="dark" onClick={() => { /* TODO */ }}>Images</Button>
+          <Button block outline color="danger" onClick={() => this.handleDelete()}>Delete</Button>
         </div>
 
         <div className="post-editor">
@@ -130,14 +163,90 @@ export class Post extends Component {
     return this.md.render(this.state.post.content)
   }
 
+  get categoryOptions () {
+    return this.state.categories.map(category => {
+      return { value: category.slug, label: category.name }
+    })
+  }
+
+  get tagOptions () {
+    return this.state.tags.map(tag => {
+      return { value: tag.slug, label: tag.name }
+    })
+  }
+
+  get categoriesBySlug () {
+    const obj = {}
+    this.state.categories.forEach(category => {
+      obj[category.slug] = category
+    })
+    return obj
+  }
+
+  get tagsBySlug () {
+    const obj = {}
+    this.state.tags.forEach(tag => {
+      obj[tag.slug] = tag
+    })
+    return obj
+  }
+
   async fetchPost (postSlug) {
     const res = await PostApi.getPost(postSlug)
     res.post.date = res.post.date ? new Date(res.post.date) : null
     this.setState({ post: res.post })
   }
 
-  updatePost (postSlug, data) {
+  async fetchTags () {
+    const res = await TagApi.getTags()
+    this.setState({ tags: res.tags })
+  }
 
+  async fetchCategories () {
+    const res = await CategoryApi.getCategories()
+    this.setState({ categories: res.categories })
+  }
+
+  async updatePost (postSlug, data) {
+    data = Object.assign({}, data)
+    delete data._id
+    data.category = data.category ? data.category._id : null
+    data.tags = data.tags.map(tag => tag._id)
+    const res = await PostApi.updatePost(postSlug, data)
+    alert('Saved.')
+    this.props.history.push(`/posts/${res.post.slug}`)
+  }
+
+  async deletePost (postSlug) {
+    const res = await PostApi.deletePost(postSlug)
+    this.props.history.push(`/posts`)
+  }
+
+  handleCategorySelectChange (valueLabel) {
+    this.mergeAndSetState('post', 'category', valueLabel ? this.categoriesBySlug[valueLabel.value] : null)
+  }
+
+  handleTagSelectChange (valueLabels) {
+    const postTags = valueLabels.map(valueLabel => this.tagsBySlug[valueLabel.value])
+    this.mergeAndSetState('post', 'tags', postTags)
+  }
+
+  handleSave () {
+    const postSlug = this.props.match.params.postSlug
+    if (!window.confirm('Confirm to update?')) {
+      return
+    }
+    const data = this.state.post
+    this.updatePost(postSlug, data)
+  }
+
+  handleDelete () {
+    const postSlug = this.props.match.params.postSlug
+    if (window.prompt(`Input the slug '${postSlug}' to delete the post`) !== postSlug) {
+      alert(`Input the slug '${postSlug}' to delete the post`)
+      return
+    }
+    this.deletePost(postSlug)
   }
 }
 

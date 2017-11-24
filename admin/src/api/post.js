@@ -18,6 +18,6 @@ export const updatePost = (postSlug, body) => api.patch({
   body: body
 })
 
-export const removePost = (postSlug) => api.delete({
+export const deletePost = (postSlug) => api.delete({
   url: `/posts/${postSlug}`
 })

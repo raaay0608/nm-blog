@@ -24,6 +24,11 @@ export class Post extends Model {
   static async create (doc) {
     // default values and basic validations
     // may add validator to MongoDB later
+
+    if (doc.hasOwnProperty('state') && !['published', 'draft'].includes(doc.state)) {
+      throw new Error(`Invalid parameter {state: ${doc.state}}`)
+    }
+
     doc.heroImage = doc.heroImage || ''
     doc.intro = doc.intro || ''
     doc.content = doc.content || ''
@@ -37,9 +42,6 @@ export class Post extends Model {
     }
     if (!doc.title) {
       throw new Error(`Missing parameter "title"`)
-    }
-    if (!['published', 'draft'].includes(doc.state)) {
-      throw new Error(`Invalid parameter {state: ${doc.state}}`)
     }
 
     let [_category, _tags] = [null, []]
@@ -134,6 +136,34 @@ export class Post extends Model {
     const cursor = await this.aggregate(pipeline)
     const res = cursor.toArray()
     return res
+  }
+
+  static async modify (filter, update) {
+    if (update.hasOwnProperty('state') && !['published', 'draft'].includes(update.state)) {
+      throw new Error(`Invalid parameter {state: ${update.state}}`)
+    }
+
+    if (update.category) {
+      const _category = await Category.get({ $or: [
+        { _id: ObjectId.isValid(update.category) ? ObjectId(update.category) : null },
+        { slug: update.category },
+        { name: update.category }
+      ] })
+      update.category = _category._id
+    }
+
+    if (update.tags && update.tags.length) {
+      const _tags = await Promise.all(update.tags.map(tag => {
+        return Tag.get({ $or: [
+          { _id: ObjectId.isValid(tag) ? ObjectId(tag) : null },
+          { slug: tag },
+          { name: tag }
+        ]})
+      }))
+      update.tags = _tags.map(tag => tag._id)
+    }
+    let res = await super.modify(filter, update)
+    return this.get({ _id: res._id })
   }
 }
 
