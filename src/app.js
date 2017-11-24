@@ -25,7 +25,7 @@ export default app
 KoaOnError(app)
 
 // middlewares
-app.use(KoaBody())
+app.use(KoaBody({ multipart: true }))
 app.use(KoaLogger())
 app.use(KoaJson())
 app.use(cors())

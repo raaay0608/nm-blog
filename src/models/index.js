@@ -59,7 +59,7 @@ export class Model {
   }
 
   /**
-   * Same as `findOne`, to be overrided
+   * Get one, throw error if not found
    */
   static async get (query) {
     const doc = await this.collection.findOne(query)
@@ -91,7 +91,7 @@ export class Model {
   static async delete (filter) {
     let res = await this.findOneAndDelete(filter)
     if (!res.value) {
-      throw new Error('Does Not Exist') // should 404
+      throw new Error('Not Found') // should 404
     }
     return res.value
   }
@@ -197,30 +197,49 @@ export class FileModel {
   }
 
   static async getDownloadStreamByMetadata (metadata = {}) {
-    const fileNode = this.fileCollection.findOne({ metadata: metadata })
+    const fileNode = this.fileCollection.findOne({ metadata })
     return this.getDownloadStreamById(fileNode._id)
   }
 
-  static async getFileByMetadata (metadata) {
-    return this.fileCollection.findOne({metadata})
+  static async list (metadata = {}) {
+    return this.fileCollection.find({ metadata }).toArray()
+  }
+
+  static async getByMetadata (metadata = {}) {
+    const file = this.fileCollection.findOne({ metadata })
+    if (!file) {
+      throw new Error('Not found')
+    }
+    return file
   }
 
   static async modifyFileInfo (filter, update) {
+    // TODO: throw Error if not found
     const options = { returnOriginal: false }
-    return this.fileCollection.findOneAndUpdate(filter, update, options)
+    const res = this.fileCollection.findOneAndUpdate(filter, { $set: update }, options)
+    if (!res.value) {
+      throw new Error('Not found')
+    }
+    return res.value
   }
 
   static async deleteById (id) {
-    return this.bucket.delete(MongoDB.ObjectId(id))
+    // TODO: throw Error if not found
+    const res = this.bucket.delete(MongoDB.ObjectId(id))
+    console.log(res)
+    return res
   }
 
   static async deleteOneByMetadata (metadata = {}) {
-    const fileNode = await this.fileCollection.findOne({ metadata: metadata })
+    const fileNode = await this.fileCollection.findOne({ metadata })
+    if (!fileNode) {
+      throw new Error('Not found')
+    }
     return this.deleteByIdById(fileNode._id)
   }
 
   static async deleteManyByMetadata (metadata = {}) {
-    const fileNodes = await this.fileCollection.find({ metadata: metadata }).toArray()
+    const fileNodes = await this.fileCollection.find({ metadata }).toArray()
     return Promise.all(fileNodes.map(fileNode => {
       return this.bucket.delete(fileNode._id)
     }))
