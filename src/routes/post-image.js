@@ -1,4 +1,6 @@
 import KoaRouter from 'koa-router'
+// import Busboy from 'busboy'
+// import KoaBusboy from 'koa-busboy'
 
 import Post from '~/models/post'
 import PostImage from '~/models/post-image'
@@ -12,7 +14,7 @@ router.get('/posts/:postSlug/images', async function (ctx, next) {
       const post = await Post.get({ slug: ctx.params.postSlug }) // check if posts exists
       const imageDocs = await PostImage.list({ postId: post._id })
       imageDocs.map(imageDoc => {
-        imageDoc.url = `/posts/${post.slug}/images/${imageDoc.metadata.fileName}`
+        imageDoc.url = `/posts/${post.slug}/images/${imageDoc.metadata.filename}`
       })
       ctx.body = { images: imageDocs }
       break
@@ -21,28 +23,27 @@ router.get('/posts/:postSlug/images', async function (ctx, next) {
   }
 })
 
-// image upload, multipart-formdata
+// multipart-formdata
 router.post('/posts/:postSlug/images', async function (ctx, next) {
-  switch (ctx.accepts('multipart-formdata')) {
-    case 'multipart-formdata':
-      const post = Post.get({ slug: ctx.params.postSlug })
-      const file = ctx.request.body.files.image // { fieldname, originaname, encoding, mimetype, size, buffer }
-      const contentType = file.type || null
-      const metadata = ctx.request.body.metadata
-      metadata.fileName = metadata.fileName || file.originalname
+  switch (ctx.accepts('json')) {
+    case 'json':
+      const post = await Post.get({post: ctx.params.slug})
+      let { file, filename, metadata } = ctx.request.body
+      metadata = JSON.parse(metadata)
+      metadata.filename = filename || file.name
       metadata.post = post._id
-
+      const contentType = file.mimetype || null
       const uploadStream = PostImage.getUploadStream(contentType, metadata)
-      const imageId = uploadStream._id
-
+      const imageId = uploadStream.id
       await new Promise((resolve, reject) => {
-        uploadStream.on('error', (err) => reject(err))
-        uploadStream.on('finish', () => resolve())
-        uploadStream.write(file.buffer)
+        file.pipe(uploadStream)
+          // .on('close', () => resolve())
+          .on('finish', () => resolve())
+          .on('error', (err) => reject(err))
       })
-
-      const imageDoc = await PostImage.getById(imageId)
-      ctx.body = { image: imageDoc }
+      const res = await PostImage.getById(imageId)
+      res.url = `/posts/${post.slug}/images/${res.metadata.filename}`
+      ctx.body = { image: res }
       break
     default:
       ctx.throw(406)
@@ -50,33 +51,45 @@ router.post('/posts/:postSlug/images', async function (ctx, next) {
 })
 
 // get image info or file, depending on "Accept" header
-router.get('/posts/:postSlug/images/:fileName', async function (ctx, next) {
+router.get('/posts/:postSlug/images/:filename', async function (ctx, next) {
   switch (ctx.accepts('json', 'image/*')) {
-    case 'json':
+    case 'json': {
       const post = await Post.get({ slug: ctx.params.postSlug })
-      const imageDoc = PostImage.getByMetadata({
-        post: post._id,
-        fileName: ctx.params.fileName
+      const file = await PostImage.get({
+        'metadata.post': post._id,
+        'metadata.filename': ctx.params.filename
       })
-      imageDoc.url = `/posts/${post.slug}/images/${imageDoc.metadata.fileName}`
-      ctx.body = { image: imageDoc }
+      file.url = `/posts/${post.slug}/images/${file.metadata.filename}`
+      ctx.body = { image: file }
       break
-    case 'image/*':
-      // TODO
+    }
+    case 'image/*': {
+      const post = await Post.get({ slug: ctx.params.postSlug })
+      const file = await PostImage.get({
+        'metadata.post': post._id,
+        'metadata.filename': ctx.params.filename
+      })
+      const downloadStream = await PostImage.getDownloadStreamById(file._id)
+      const filename = file.metadata.filename || file.filename
+      const contentDeposition = filename ? `inline; filename="${filename}"` : 'inline'
+      ctx.append('Content-Disposition', contentDeposition)
+      ctx.append('Content-Type', file.contentType || 'application/octet-stream')
+      ctx.body = downloadStream
       break
+    }
     default:
       ctx.throw(406)
   }
 })
 
 // modify image info, i.e. filename
-router.patch('/posts/:postSlug/images/:fileName', async function (ctx, next) {
+router.patch('/posts/:postSlug/images/:filename', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       const data = ctx.request.body
       const post = await Post.get({ slug: ctx.params.postSlug })
       const result = await PostImage.modifyFileInfo(
-        { post: post._id, fileName: ctx.params.fileName },
+        { post: post._id, filename: ctx.params.filename },
         data
       )
       ctx.body = { result }
@@ -87,13 +100,13 @@ router.patch('/posts/:postSlug/images/:fileName', async function (ctx, next) {
 })
 
 // delete a image
-router.delete('/posts/:postSlug/images/:fileName', async function (ctx, next) {
+router.delete('/posts/:postSlug/images/:filename', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       const post = await Post.get({ slug: ctx.params.postSlug })
       const result = await PostImage.deleteOneByMetadata({
         post: post._id,
-        fileName: ctx.params.fileName
+        filename: ctx.params.filename
       })
       ctx.body = { result }
       break

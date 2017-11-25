@@ -9,11 +9,13 @@ import KoaLogger from 'koa-logger'
 import KoaOnError from 'koa-onerror'
 import KoaJWT from 'koa-jwt'
 import cors from '@koa/cors'
+import Multy from 'multy'
 
 import auth from '~/middlewares/auth'
 import indexRouter from '~/routes/index'
 import tokenRouter from '~/routes/token'
 import postRouter from '~/routes/post'
+import postImageRouter from '~/routes/post-image'
 import categoryRouter from '~/routes/category'
 import tagRouter from '~/routes/tag'
 import * as db from '~/models'
@@ -25,7 +27,8 @@ export default app
 KoaOnError(app)
 
 // middlewares
-app.use(KoaBody({ multipart: true }))
+app.use(KoaBody()) // TODO: no need for multipart parse anymore, may replace with a lighter parser
+app.use(Multy())
 app.use(KoaLogger())
 app.use(KoaJson())
 app.use(cors())
@@ -43,6 +46,7 @@ app.use(KoaViews(path.join(__dirname, 'views'), {extension: 'ejs'}))
 app.use(indexRouter.routes(), indexRouter.allowedMethods())
 app.use(tokenRouter.routes(), tokenRouter.allowedMethods())
 app.use(postRouter.routes(), postRouter.allowedMethods())
+app.use(postImageRouter.routes(), postImageRouter.allowedMethods())
 app.use(categoryRouter.routes(), categoryRouter.allowedMethods())
 app.use(tagRouter.routes(), tagRouter.allowedMethods())
 

@@ -177,7 +177,7 @@ export class FileModel {
 
   static get bucket () {
     const options = {
-      bucketName: '',
+      bucketName: this.BUCKET_NAME,
       chunkSizeBytes: 255 * 1024
     }
     let bucket = new MongoDB.GridFSBucket(this.db, options)
@@ -196,22 +196,46 @@ export class FileModel {
     return this.bucket.openDownloadStream(MongoDB.ObjectId(id))
   }
 
-  static async getDownloadStreamByMetadata (metadata = {}) {
-    const fileNode = this.fileCollection.findOne({ metadata })
+  static async getDownloadStream (query) {
+    const fileNode = await this.fileCollection.findOne(query)
+    if (!fileNode) {
+      throw new Error('Not found')
+    }
     return this.getDownloadStreamById(fileNode._id)
   }
 
-  static async list (metadata = {}) {
-    return this.fileCollection.find({ metadata }).toArray()
+  // static async list (metadata = {}) {
+  //   return this.fileCollection.find({ metadata }).toArray()
+  // }
+
+  static async list (query) {
+    return this.fileCollection.find(query).toArray()
   }
 
-  static async getByMetadata (metadata = {}) {
-    const file = this.fileCollection.findOne({ metadata })
+  static async getById (_id) {
+    _id = MongoDB.ObjectId(_id)
+    const file = await this.fileCollection.findOne({ _id })
     if (!file) {
       throw new Error('Not found')
     }
     return file
   }
+
+  static async get (query) {
+    const file = await this.fileCollection.findOne(query)
+    if (!file) {
+      throw new Error('Not found')
+    }
+    return file
+  }
+
+  // static async getByMetadata (metadata = {}) {
+  //   const file = await this.fileCollection.findOne({ metadata })
+  //   if (!file) {
+  //     throw new Error('Not found')
+  //   }
+  //   return file
+  // }
 
   static async modifyFileInfo (filter, update) {
     // TODO: throw Error if not found
@@ -226,22 +250,21 @@ export class FileModel {
   static async deleteById (id) {
     // TODO: throw Error if not found
     const res = this.bucket.delete(MongoDB.ObjectId(id))
-    console.log(res)
     return res
   }
 
-  static async deleteOneByMetadata (metadata = {}) {
-    const fileNode = await this.fileCollection.findOne({ metadata })
-    if (!fileNode) {
-      throw new Error('Not found')
-    }
-    return this.deleteByIdById(fileNode._id)
-  }
+  // static async deleteOneByMetadata (metadata = {}) {
+  //   const fileNode = await this.fileCollection.findOne({ metadata })
+  //   if (!fileNode) {
+  //     throw new Error('Not found')
+  //   }
+  //   return this.deleteByIdById(fileNode._id)
+  // }
 
-  static async deleteManyByMetadata (metadata = {}) {
-    const fileNodes = await this.fileCollection.find({ metadata }).toArray()
-    return Promise.all(fileNodes.map(fileNode => {
-      return this.bucket.delete(fileNode._id)
-    }))
-  }
+  // static async deleteManyByMetadata (metadata = {}) {
+  //   const fileNodes = await this.fileCollection.find({ metadata }).toArray()
+  //   return Promise.all(fileNodes.map(fileNode => {
+  //     return this.bucket.delete(fileNode._id)
+  //   }))
+  // }
 }

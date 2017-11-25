@@ -6,6 +6,7 @@ import Index from './components/Index'
 import Login from './components/Login'
 import PostList from './components/PostList'
 import Post from './components/Post'
+import PostImage from './components/PostImage'
 import Category from './components/Category'
 import CategoryList from './components/CategoryList'
 import Tag from './components/Tag'
@@ -23,6 +24,7 @@ class App extends Component {
           <Route path="login" component={Login}/>
 
           <Switch>
+            <Route path="/posts/:postSlug/images" component={PostImage}/>
             <Route path="/posts/:postSlug" component={Post}/>
             <Route path="/posts" component={PostList}/>
           </Switch>

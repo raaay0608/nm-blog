@@ -1,22 +1,50 @@
 const urlBase = 'http://localhost:8000' // TODO
 
-const baseHeaders = new Headers({
+// const baseHeaders = new Headers({
+//   'Content-Type': 'application/json',
+//   'Accept': 'application/json',
+//   'Accept-Charset': 'utf-8'
+// })
+
+// const multipartBaseHeader = new Headers({
+//   // 'Content-Type': 'multipart/form-data',
+//   'Content-Type': undefined, // browser will handle it...
+//   'Accept': 'application/json',
+//   'Accept-Charset': 'utf-8'
+// })
+
+const jsonHeaders = {
   'Content-Type': 'application/json',
   'Accept': 'application/json',
   'Accept-Charset': 'utf-8'
-})
+}
 
-const fileUploadBaseHeader = new Headers({ // eslint-disable-line no-unused-vars
-  'Content-Type': 'multipart/form-data',
+const defaultHeaders = {
   'Accept': 'application/json',
   'Accept-Charset': 'utf-8'
-})
+}
 
-function getHeaders () {
-  const headers = new Headers(baseHeaders)
+function getHeaders (type = 'json') {
+  let headers = {}
+  switch (type) {
+    case 'json': {
+      headers = Object.assign({}, jsonHeaders)
+      break
+    }
+    case 'multipart': {
+      headers = Object.assign({}, defaultHeaders)
+      break
+    }
+    default: {
+      headers = Object.assign({}, defaultHeaders)
+      break
+    }
+  }
   if (localStorage.getItem('token')) {
     headers.append('Authorization', `Bearer ${localStorage.getItem('token')}`)
+    headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`
   }
+  console.log(headers)
   return headers
 }
 
@@ -38,7 +66,7 @@ const get = ({url, queries = {}} = {}) => {
   url = urlWithQueires(url, queries)
   const init = {
     method: 'GET',
-    headers: getHeaders()
+    headers: getHeaders('json')
   }
   return fetch(url, init)
     .then(handleErrors)
@@ -50,8 +78,20 @@ const post = ({url, queries = {}, body = {}} = {}) => {
   body = JSON.stringify(body)
   const init = {
     method: 'POST',
-    headers: getHeaders(),
+    headers: getHeaders('json'),
     body: body
+  }
+  return fetch(url, init)
+    .then(handleErrors)
+    .then(res => res.json())
+}
+
+const multipartPost = ({url, queries = {}, formData} = {}) => {
+  url = urlWithQueires(url, queries)
+  const init = {
+    method: 'POST',
+    headers: getHeaders('multipart'),
+    body: formData
   }
   return fetch(url, init)
     .then(handleErrors)
@@ -63,7 +103,7 @@ const put = ({url, queries = {}, body = {}} = {}) => {
   body = JSON.stringify(body)
   const init = {
     method: 'PUT',
-    headers: getHeaders(),
+    headers: getHeaders('json'),
     body: body
   }
   return fetch(url, init)
@@ -76,7 +116,7 @@ const patch = ({url, queries = {}, body = {}} = {}) => {
   body = JSON.stringify(body)
   const init = {
     method: 'PATCH',
-    headers: getHeaders(),
+    headers: getHeaders('json'),
     body: body
   }
   return fetch(url, init)
@@ -89,7 +129,7 @@ const del = ({url, queries = {}} = {}) => {
   url = urlWithQueires(url, queries)
   const init = {
     method: 'DELETE',
-    headers: getHeaders()
+    headers: getHeaders('json')
   }
   return fetch(url, init)
     .then(handleErrors)
@@ -104,5 +144,6 @@ export default {
   post: post,
   patch: patch,
   put: put,
-  delete: del
+  delete: del,
+  multipartPost: multipartPost
 }

@@ -133,7 +133,10 @@ export class Post extends Component {
             </FormGroup>
           </Form>
           <Button block outline color="primary" onClick={() => this.handleSave()}>Save</Button>
-          <Button block outline color="dark" onClick={() => { /* TODO */ }}>Images</Button>
+          <Button block outline color="dark"
+            onClick={() => { this.props.history.push(`/posts/${this.state.post.slug}/images`) }}>
+            Images
+          </Button>
           <Button block outline color="danger" onClick={() => this.handleDelete()}>Delete</Button>
         </div>
 
