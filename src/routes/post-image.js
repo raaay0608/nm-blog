@@ -12,7 +12,8 @@ router.get('/posts/:postSlug/images', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       const post = await Post.get({ slug: ctx.params.postSlug }) // check if posts exists
-      const imageDocs = await PostImage.list({ postId: post._id })
+      const imageDocs = await PostImage.list({ 'metadata.post': post._id })
+      // const imageDocs = await PostImage.list()
       imageDocs.map(imageDoc => {
         imageDoc.url = `/posts/${post.slug}/images/${imageDoc.metadata.filename}`
       })
@@ -27,7 +28,7 @@ router.get('/posts/:postSlug/images', async function (ctx, next) {
 router.post('/posts/:postSlug/images', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
-      const post = await Post.get({post: ctx.params.slug})
+      const post = await Post.get({slug: ctx.params.postSlug})
       let { file, filename, metadata } = ctx.request.body
       metadata = JSON.parse(metadata)
       metadata.filename = filename || file.name
@@ -99,7 +100,7 @@ router.patch('/posts/:postSlug/images/:filename', async function (ctx, next) {
   }
 })
 
-// delete a image
+// delete an image
 router.delete('/posts/:postSlug/images/:filename', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
