@@ -11,7 +11,9 @@ export const router = new KoaRouter()
 router.get('/posts/:postSlug/images', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
+      console.log(ctx.params)
       const post = await Post.get({ slug: ctx.params.postSlug }) // check if posts exists
+      console.log(post)
       const imageDocs = await PostImage.list({ 'metadata.post': post._id })
       // const imageDocs = await PostImage.list()
       imageDocs.map(imageDoc => {

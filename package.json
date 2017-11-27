@@ -4,14 +4,18 @@
   "description": "personal blog system",
   "main": "app.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev babel-node ./src/app.js --use_strict",
-    "nodemon-dev": "nodemon --exec cross-env NODE_ENV=dev babel-node ./src/app.js --use_strict",
+    "_dev": "cross-env NODE_ENV=dev babel-node ./src/app.js --use_strict",
+    "dev": "nodemon --exec cross-env NODE_ENV=dev babel-node ./src/app.js --use_strict",
     "test": "echo \"Error: no test specified\" && exit 1",
     "node": "node",
     "babel-node": "babel-node"
   },
   "author": "raaay0608",
   "license": "MIT",
+  "nodemonConfig": {
+    "ignore": ["admin/*"],
+	"delay": "1000"
+  },
   "dependencies": {
     "@koa/cors": "^2.2.1",
     "busboy": "^0.2.14",

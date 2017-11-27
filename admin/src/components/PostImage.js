@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { Button, Container, Form, FormGroup, Label, Col, Row, Input } from 'reactstrap'
+import { Button, Container, Form, FormGroup, Label, Col, Row, Input,
+  Card, CardHeader, CardBody } from 'reactstrap'
 
 import * as PostApi from '../api/post'
 import * as PostImageApi from '../api/post-image'
@@ -31,10 +32,12 @@ export class PostImage extends Component {
 
   componentDidMount () {
     this.fetchPost(this.props.match.params.postSlug)
+    this.fetchImages(this.props.match.params.postSlug)
   }
 
   componentWillReceiveProps (nextProps) {
     this.fetchPost(nextProps.match.params.postSlug)
+    this.fetchImages(this.props.match.params.postSlug)    
   }
 
   render () {
@@ -43,62 +46,97 @@ export class PostImage extends Component {
         <Container className="content">
 
           <div className="post-info">
-            <Form className="border">
-              <FormGroup row>
-                <Label for="idText" sm={3}>Post Id</Label>
-                <Col sm={9}>
-                  <Input type="text" name="_id" id="idText" disabled value={this.state.post._id}></Input>
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="slugText" sm={3}>Post slug</Label>
-                <Col sm={9}>
-                  <Input type="text" name="slug" id="slugText" disabled value={this.state.post.slug}></Input>
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="titleText" sm={3}>Post title</Label>
-                <Col sm={9}>
-                  <Input type="text" name="title" id="titleText" disabled value={this.state.post.title}></Input>
-                </Col>
-              </FormGroup>
-            </Form>
+            <Card color="light">
+              <Form className="border">
+                <FormGroup row>
+                  <Label for="idText" sm={3}>Post Id</Label>
+                  <Col sm={9}>
+                    <Input type="text" name="_id" id="idText" disabled value={this.state.post._id}></Input>
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="slugText" sm={3}>Post slug</Label>
+                  <Col sm={9}>
+                    <Input type="text" name="slug" id="slugText" disabled value={this.state.post.slug}></Input>
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="titleText" sm={3}>Post title</Label>
+                  <Col sm={9}>
+                    <Input type="text" name="title" id="titleText" disabled value={this.state.post.title}></Input>
+                  </Col>
+                </FormGroup>
+              </Form>
+            </Card>
           </div>
 
           <div className="image-upload">
-            <Form className="border">
-              <Row>
-                <Col xs={7}>
-                  <FormGroup row>
-                    <Label for="filenameText" sm={3}>File name</Label>
-                    <Col sm={9}>
-                      <Input type="text" name="filename" id="filenameText"
-                        value={this.state.filename}
-                        onChange={(e) => this.setState({filename: e.target.value})}>
-                      </Input>
-                    </Col>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="imageFile">File</Label>
-                    <Input type="file" name="file" id="imageFile" accept="image/*"
-                      ref={(ref) => { this.fileUpload = ref }}
-                      onChange={(e) => this.handleUploadChange(e)} />
-                  </FormGroup>
-                  <Button outline color="dark"
-                    onClick={(e) => this.handleUpload(e)}>
-                    Upload
-                  </Button>
-                </Col>
-                <Col xs={5}>
-                  <img className="img-thumbnail" alt=""
-                    src={this.state.previewSrc}
-                    ref={(ref) => { this.preview = ref }}></img>
-                </Col>
-              </Row>
-            </Form>
+            <Card color="light">
+              <Form className="border">
+                <Row>
+                  <Col xs={7}>
+                    <FormGroup row>
+                      <Label for="filenameText" sm={3}>File name</Label>
+                      <Col sm={9}>
+                        <Input type="text" name="filename" id="filenameText"
+                          value={this.state.filename}
+                          onChange={(e) => this.setState({filename: e.target.value})}>
+                        </Input>
+                      </Col>
+                    </FormGroup>
+                    <FormGroup>
+                      <Label for="imageFile">File</Label>
+                      <Input type="file" name="file" id="imageFile" accept="image/*"
+                        ref={(ref) => { this.fileUpload = ref }}
+                        onChange={(e) => this.handleUploadChange(e)} />
+                    </FormGroup>
+                    <Button outline color="dark"
+                      onClick={(e) => this.handleUpload(e)}>
+                      Upload
+                    </Button>
+                  </Col>
+                  <Col xs={5}>
+                    <img className="img-thumbnail" alt=""
+                      src={this.state.previewSrc}
+                      ref={(ref) => { this.preview = ref }}></img>
+                  </Col>
+                </Row>
+              </Form>
+            </Card>
           </div>
 
           <div className="images">
+            {this.state.images.map((image, index) =>
+              <Card key={image._id} color="light">
+                <CardHeader>
+                  {image.metadata.filename}
+                </CardHeader>
+                <CardBody>
+                  <Form>
+                    <FormGroup row>
+                      <Label for={`image-id-${image._id}`} sm={2}>_id</Label>
+                      <Col sm={10}>
+                        <Input id={`image-id-${image._id}`} type="text" value={image._id} disabled name="_id" sm={10}></Input>
+                      </Col>
+                    </FormGroup>
+                  </Form>
+                  <Form>
+                    <FormGroup row>
+                      <Label for={`image-filename-${image._id}`} sm={2}>filename</Label>
+                      <Col sm={10}>
+                        <Input id={`image-filename-${image._id}`} type="text" name="filename" sm={10}
+                          value={image.metadata.filename}
+                          onChange={(e) => {
+                            image.name = e.target.value
+                            this.forceUpdate()
+                          }}>
+                        </Input>
+                      </Col>
+                    </FormGroup>
+                  </Form>
+                </CardBody>
+              </Card>
+            )}
           </div>
 
         </Container>
@@ -119,7 +157,8 @@ export class PostImage extends Component {
   }
 
   async fetchImages (postSlug) {
-    // TODO
+    const res = await PostImageApi.getImages(postSlug)
+    this.setState({ images: res.images })
   }
 
   async uploadImage (file, filename, metadata = {}) {
