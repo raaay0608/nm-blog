@@ -30,10 +30,6 @@ export class PostList extends Component {
     this.fetchPosts()
   }
 
-  componentDidUpdate () {
-    console.log(this.state.newPost)
-  }
-
   render () {
     return (
       <div className="PostList">
@@ -112,7 +108,6 @@ export class PostList extends Component {
   async createPost (data) {
     try {
       const res = await PostApi.createPost(data)
-      console.log(res)
       this.props.history.push(`/posts/${res.post.slug}`)
     } catch (err) {
       alert(err)

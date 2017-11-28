@@ -44,7 +44,6 @@ function getHeaders (type = 'json') {
     headers.append('Authorization', `Bearer ${localStorage.getItem('token')}`)
     headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`
   }
-  console.log(headers)
   return headers
 }
 

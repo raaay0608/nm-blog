@@ -11,9 +11,7 @@ export const router = new KoaRouter()
 router.get('/posts/:postSlug/images', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
-      console.log(ctx.params)
       const post = await Post.get({ slug: ctx.params.postSlug }) // check if posts exists
-      console.log(post)
       const imageDocs = await PostImage.list({ 'metadata.post': post._id })
       // const imageDocs = await PostImage.list()
       imageDocs.map(imageDoc => {
@@ -86,13 +84,14 @@ router.get('/posts/:postSlug/images/:filename', async function (ctx, next) {
 })
 
 // modify image info, i.e. filename
+// Not tested
 router.patch('/posts/:postSlug/images/:filename', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       const data = ctx.request.body
       const post = await Post.get({ slug: ctx.params.postSlug })
       const result = await PostImage.modifyFileInfo(
-        { post: post._id, filename: ctx.params.filename },
+        { 'metadata.post': post._id, 'metadata.filename': ctx.params.filename },
         data
       )
       ctx.body = { result }
@@ -107,9 +106,9 @@ router.delete('/posts/:postSlug/images/:filename', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       const post = await Post.get({ slug: ctx.params.postSlug })
-      const result = await PostImage.deleteOneByMetadata({
-        post: post._id,
-        filename: ctx.params.filename
+      const result = await PostImage.deleteOne({
+        'metadata.post': post._id,
+        'metadata.filename': ctx.params.filename
       })
       ctx.body = { result }
       break

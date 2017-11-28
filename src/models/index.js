@@ -253,6 +253,14 @@ export class FileModel {
     return res
   }
 
+  static async deleteOne (filter) {
+    const fileNode = await this.fileCollection.findOne(filter)
+    if (!fileNode) {
+      throw new Error('Not found')
+    }
+    return this.deleteById(fileNode._id)
+  }
+
   // static async deleteOneByMetadata (metadata = {}) {
   //   const fileNode = await this.fileCollection.findOne({ metadata })
   //   if (!fileNode) {
