@@ -4,8 +4,10 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.0.0-beta.2",
+    "github-markdown-css": "^2.9.0",
     "jquery": "^3.2.1",
     "markdown-it": "^8.4.0",
+    "markdown-it-replace-link": "^1.0.1",
     "popper.js": "^1.13.0",
     "react": "^16.1.1",
     "react-datetime": "^2.11.0",

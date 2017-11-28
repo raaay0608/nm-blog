@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { Button, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap'
 import MarkdownIt from 'markdown-it'
+import MarkdownItReplaceLink from 'markdown-it-replace-link'
 import TabOverride from 'taboverride'
 import Select from 'react-select'
 import 'react-select/dist/react-select.css'
@@ -32,13 +33,18 @@ export class Post extends Component {
         _id: ''
       }
     }
-    this.md = new MarkdownIt()
   }
 
   componentWillMount () {
     this.fetchCategories()
     this.fetchTags()
     this.fetchPost(this.props.match.params.postSlug)
+    const postSlug = this.props.match.params.postSlug
+    this.md = new MarkdownIt({
+      replaceLink: function (link, env) {
+        return `http://localhost:8000/posts/${postSlug}/${link}`
+      }})
+    this.md.use(MarkdownItReplaceLink)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -146,7 +152,7 @@ export class Post extends Component {
             value={this.state.post.content}
             onChange={(e) => { this.mergeAndSetState('post', 'content', e.target.value) }}
           />
-          <div className="post-preview"
+          <div className="post-preview markdown-body"
             dangerouslySetInnerHTML={{__html: this.markdownedContent}}
           >
           </div>

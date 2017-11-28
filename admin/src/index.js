@@ -3,6 +3,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import registerServiceWorker from './registerServiceWorker'
 
+import 'github-markdown-css'
+
 import './include/bootstrap'
 import './style/app.css'
 import './style/content.css'
