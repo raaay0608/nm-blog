@@ -40,7 +40,7 @@ export class PostList extends Component {
           </div>
 
           <Table hover>
-            <caption>List of posts</caption>
+            <caption>list of posts</caption>
             <thead className="thead-light">
               <tr>
                 <th scope="col">#</th>
@@ -64,14 +64,14 @@ export class PostList extends Component {
             <ModalBody>
               <Form>
                 <FormGroup>
-                  <Label for="slugText">Slug</Label>
+                  <Label for="slugText">slug</Label>
                   <Input type="text" name="slug" id="slugText"
                     value={this.state.newPost.slug}
                     onChange={(e) => { this.mergeAndSetState('newPost', 'slug', e.target.value) }}
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="titleText">Name</Label>
+                  <Label for="titleText">title</Label>
                   <Input type="text" name="title" id="titleText"
                     value={this.state.newPost.name}
                     onChange={(e) => { this.mergeAndSetState('newPost', 'title', e.target.value) }}

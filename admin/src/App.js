@@ -21,7 +21,7 @@ class App extends Component {
           <Headbar/>
 
           <Route exact path="/" component={Index}/>
-          <Route path="login" component={Login}/>
+          <Route path="/login" component={Login}/>
 
           <Switch>
             <Route path="/posts/:postSlug/images" component={PostImage}/>

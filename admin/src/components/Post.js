@@ -125,9 +125,9 @@ export class Post extends Component {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="categorySelect">category</Label>
+              <Label for="stateSelect">state</Label>
               <Select
-                name={'category'}
+                name={'state'}
                 clearable={false}
                 options={[
                   { value: 'draft', label: 'Draft' },
@@ -223,7 +223,7 @@ export class Post extends Component {
     data.tags = data.tags.map(tag => tag._id)
     const res = await PostApi.updatePost(postSlug, data)
     alert('Saved.')
-    this.props.history.push(`/posts/${res.post.slug}`)
+    this.props.history.replace(`/posts/${res.post.slug}`)
   }
 
   async deletePost (postSlug) {

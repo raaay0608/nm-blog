@@ -1,8 +1,8 @@
 import { Model } from '~/models/index'
 import Post from './post'
 
-const MODEL_NAME = 'Category' // eslint-disable-line no-unused-vars
-const COLL_NAME = 'categories' // eslint-disable-line no-unused-vars
+const MODEL_NAME = 'Category'
+const COLL_NAME = 'categories'
 
 /*
  * slug        {string} - required, unique, index
@@ -10,6 +10,34 @@ const COLL_NAME = 'categories' // eslint-disable-line no-unused-vars
  * description {string}
  * preference  {number} - required, default = 0
  */
+const VALIDATOR = {
+  title: 'Category',
+  bsonType: 'object',
+  required: ['_id', 'slug', 'name', 'preference'],
+  properties: {
+    _id: {
+      bsonType: 'objectId'
+    },
+    slug: {
+      bsonType: 'string',
+      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$',
+      description: 'slug must be a valid-slug-string and is required'
+    },
+    name: {
+      bsonType: 'name',
+      description: 'name must be a string and is required'
+    },
+    description: {
+      bsonType: 'string',
+      description: 'description must be a string'
+    },
+    preference: {
+      bsonType: 'int',
+      description: 'preference must be an integer and is required'
+    }
+  },
+  additionalProperties: false
+}
 
 export class Category extends Model {
   static async list (filter) {
@@ -29,5 +57,6 @@ export class Category extends Model {
 
 Category.MODEL_NAME = MODEL_NAME
 Category.COLL_NAME = COLL_NAME
+Category.VALIDATOR = VALIDATOR
 
 export default Category

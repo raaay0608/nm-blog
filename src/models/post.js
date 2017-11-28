@@ -7,42 +7,84 @@ const ObjectId = MongoDB.ObjectId
 
 const MODEL_NAME = 'Post'
 const COLL_NAME = 'posts'
-
 /*
  * slug       {string} - required, unique, index
  * title      {string} - required, unique(?), index
  * heroImage  {string} - could be empty '', relative url, e.g. 'images/hero.jpg'
  * intro      {string} - could be empty ''
  * content    {string} - could be empty ''
- * cateogry   {ObjectId} - reference to Category
+ * category   {ObjectId} - reference to Category
  * tags       {list<ObjectId>} - references to Tag
  * state      {string} - required, in ['published', 'draft'], default='draft'
  * date       {Date} - required, default=now
  */
+const VALIDATOR = {
+  title: 'Post',
+  bsonType: 'object',
+  required: ['_id', 'slug', 'title', 'heroImage', 'intro', 'content', 'category', 'tags', 'state', 'date'],
+  properties: {
+    _id: {
+      bsonType: 'objectId'
+    },
+    slug: {
+      bsonType: 'string',
+      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$',
+      description: 'slug must be a valid-slug-string and is required'
+    },
+    title: {
+      bsonType: 'string',
+      description: 'title must be a string and is required'
+    },
+    heroImage: {
+      bsonType: 'string',
+      description: 'heroImage must be a string and represents a URL'
+    },
+    intro: {
+      bsonType: 'string',
+      description: 'intro must be string if exists'
+    },
+    content: {
+      bsonType: 'string',
+      description: 'content must be string'
+    },
+    category: {
+      bsonType: ['objectId', 'null'],
+      description: 'category must be a reference to Category if not null'
+    },
+    tags: {
+      bsonType: 'array',
+      items: {
+        bsonType: 'objectId'
+      },
+      description: 'tags must be an array of references to Tag'
+    },
+    state: {
+      bsonType: 'string', // or bool?
+      enum: ['draft', 'published'],
+      description: 'state must be either \'draft\' or \'published\''
+    },
+    date: {
+      bsonType: 'date',
+      description: 'date must be date type'
+    }
+  },
+  additionalProperties: false
+}
 
 export class Post extends Model {
   static async create (doc) {
     // default values and basic validations
-    // may add validator to MongoDB later
 
-    if (doc.hasOwnProperty('state') && !['published', 'draft'].includes(doc.state)) {
-      throw new Error(`Invalid parameter {state: ${doc.state}}`)
+    let defaultProps = {
+      heroImage: '',
+      intro: '',
+      content: '',
+      category: null,
+      tags: [],
+      state: 'draft',
+      date: new Date()
     }
-
-    doc.heroImage = doc.heroImage || ''
-    doc.intro = doc.intro || ''
-    doc.content = doc.content || ''
-    doc.category = doc.category || null
-    doc.tags = doc.tags || []
-    doc.state = doc.state || 'draft'
-    doc.date = doc.date || new Date()
-
-    if (!doc.slug) {
-      throw new Error(`Missing parameter "slug"`)
-    }
-    if (!doc.title) {
-      throw new Error(`Missing parameter "title"`)
-    }
+    doc = Object.assign(defaultProps, doc)
 
     let [_category, _tags] = [null, []]
 
@@ -169,5 +211,6 @@ export class Post extends Model {
 
 Post.MODEL_NAME = MODEL_NAME
 Post.COLL_NAME = COLL_NAME
+Post.VALIDATOR = VALIDATOR
 
 export default Post

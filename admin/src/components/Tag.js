@@ -32,21 +32,21 @@ export class Tag extends Component {
 
           <Form>
             <FormGroup disabled>
-              <Label for="idText">ID</Label>
+              <Label for="idText">_id</Label>
               <Input disabled type="text" name="id" id="idText"
                 value={this.state.tag._id}
                 onChange={(e) => { this.mergeAndSetState('tag', '_id', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="slugText">Slug</Label>
+              <Label for="slugText">slug</Label>
               <Input type="text" name="slug" id="slugText"
                 value={this.state.tag.slug}
                 onChange={(e) => { this.mergeAndSetState('tag', 'slug', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="nameText">Name</Label>
+              <Label for="nameText">name</Label>
               <Input type="text" name="name" id="nameText"
                 value={this.state.tag.name}
                 onChange={(e) => { this.mergeAndSetState('tag', 'name', e.target.value) }}
@@ -80,7 +80,7 @@ export class Tag extends Component {
     try {
       const res = await TagApi.updateTag(tagSlug, data)
       const newTagSlug = res.tag.slug
-      this.props.history.push(`/tags/${newTagSlug}`)
+      this.props.history.replace(`/tags/${newTagSlug}`)
     } catch (err) {
       alert(err)
     }

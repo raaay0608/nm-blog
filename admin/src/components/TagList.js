@@ -33,7 +33,7 @@ export class Tag extends Component {
           </div>
 
           <Table hover>
-            <caption>List of tags</caption>
+            <caption>list of tags</caption>
             <thead className="thead-light">
               <tr>
                 <th scope="col">#</th>
@@ -60,14 +60,14 @@ export class Tag extends Component {
             <ModalBody>
               <Form>
                 <FormGroup>
-                  <Label for="slugText">Slug</Label>
+                  <Label for="slugText">slug</Label>
                   <Input type="text" name="slug" id="slugText"
                     value={this.state.newTag.slug}
                     onChange={(e) => this.mergeAndSetState('newTag', 'slug', e.target.value)}
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="nameText">Name</Label>
+                  <Label for="nameText">name</Label>
                   <Input type="text" name="name" id="nameText"
                     value={this.state.newTag.name}
                     onChange={(e) => this.mergeAndSetState('newTag', 'name', e.target.value)}

@@ -53,19 +53,19 @@ export class PostImage extends Component {
               <CardBody>
                 <Form>
                   <FormGroup row>
-                    <Label for="idText" sm={3}>Post Id</Label>
+                    <Label for="idText" sm={3}>post _id</Label>
                     <Col sm={9}>
                       <Input type="text" name="_id" id="idText" disabled value={this.state.post._id}></Input>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
-                    <Label for="slugText" sm={3}>Post slug</Label>
+                    <Label for="slugText" sm={3}>post slug</Label>
                     <Col sm={9}>
                       <Input type="text" name="slug" id="slugText" disabled value={this.state.post.slug}></Input>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
-                    <Label for="titleText" sm={3}>Post title</Label>
+                    <Label for="titleText" sm={3}>post title</Label>
                     <Col sm={9}>
                       <Input type="text" name="title" id="titleText" disabled value={this.state.post.title}></Input>
                     </Col>
@@ -85,7 +85,7 @@ export class PostImage extends Component {
                   <Row>
                     <Col xs={7}>
                       <FormGroup row>
-                        <Label for="filenameText" sm={3}>File name</Label>
+                        <Label for="filenameText" sm={3}>filename</Label>
                         <Col sm={9}>
                           <Input type="text" name="filename" id="filenameText"
                             value={this.state.filename}
@@ -94,14 +94,14 @@ export class PostImage extends Component {
                         </Col>
                       </FormGroup>
                       <FormGroup>
-                        <Label for="imageFile">File</Label>
+                        <Label for="imageFile">file</Label>
                         <Input type="file" name="file" id="imageFile" accept="image/*"
                           ref={(ref) => { this.fileUpload = ref }}
                           onChange={(e) => this.handleUploadChange(e)} />
                       </FormGroup>
                       <Button color="dark"
                         onClick={(e) => this.handleUpload(e)}>
-                        Upload
+                        upload
                       </Button>
                     </Col>
                     <Col xs={5}>

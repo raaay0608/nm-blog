@@ -34,35 +34,35 @@ export class Category extends Component {
 
           <Form>
             <FormGroup>
-              <Label for="idText">ID</Label>
+              <Label for="idText">_id</Label>
               <Input disabled type="text" name="id" id="idText"
                 value={this.state.category._id}
                 onChange={(e) => { this.mergeAndSetState('category', '_id', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="slugText">Slug</Label>
+              <Label for="slugText">slug</Label>
               <Input type="text" name="slug" id="slugText"
                 value={this.state.category.slug}
                 onChange={(e) => { this.mergeAndSetState('category', 'slug', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="nameText">Name</Label>
+              <Label for="nameText">name</Label>
               <Input type="text" name="name" id="nameText"
                 value={this.state.category.name}
                 onChange={(e) => { this.mergeAndSetState('category', 'name', e.target.value) }}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="idText">Preference</Label>
+              <Label for="idText">preference</Label>
               <Input type="number" name="preference" id="preferenceNumnber"
                 value={this.state.category.preference}
                 onChange={(e) => { this.mergeAndSetState('category', 'preference', Number(e.target.value)) }}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="idText">Preference</Label>
+              <Label for="idText">description</Label>
               <Input type="textarea" name="description" id="descriptionTextArea"
                 value={this.state.category.description}
                 onChange={(e) => { this.mergeAndSetState('category', 'description', e.target.value) }}
@@ -97,7 +97,7 @@ export class Category extends Component {
     try {
       const res = await CategoryApi.updateCategory(categorySlug, data)
       const newCagetorySlug = res.category.slug
-      this.props.history.push(`/categories/${newCagetorySlug}`)
+      this.props.history.replace(`/categories/${newCagetorySlug}`)
     } catch (err) {
       alert(err)
     }

@@ -36,13 +36,13 @@ export class CategoryList extends Component {
           </div>
 
           <Table hover>
-            <caption>List of categories</caption>
+            <caption>list of categories</caption>
             <thead className="thead-light">
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">Slug</th>
-                <th scope="col">Name</th>
-                <th scope="col">Preference</th>
+                <th scope="col">slug</th>
+                <th scope="col">name</th>
+                <th scope="col">preference</th>
               </tr>
             </thead>
             <tbody>
@@ -72,21 +72,21 @@ export class CategoryList extends Component {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="nameText">Name</Label>
+                  <Label for="nameText">name</Label>
                   <Input type="text" name="name" id="nameText"
                     value={this.state.newCategory.name}
                     onChange={(e) => { this.mergeAndSetState('newCategory', 'name', e.target.value) }}
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="preferenceText">Preference</Label>
+                  <Label for="preferenceText">preference</Label>
                   <Input type="number" name="preference" id="preferenceNumnber"
                     value={this.state.newCategory.preference}
                     onChange={(e) => { this.mergeAndSetState('newCategory', 'preference', Number(e.target.value)) }}
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="descriptionTextArea">Description</Label>
+                  <Label for="descriptionTextArea">description</Label>
                   <Input type="textarea" name="description" id="descriptionTextArea"
                     value={this.state.newCategory.description}
                     onChange={(e) => { this.mergeAndSetState('newCategory', 'description', e.target.value) }}
