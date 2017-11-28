@@ -35,10 +35,10 @@ export class PostImage extends Component {
     this.fetchImages(this.props.match.params.postSlug)
   }
 
-  componentWillReceiveProps (nextProps) {
-    this.fetchPost(nextProps.match.params.postSlug)
-    this.fetchImages(this.props.match.params.postSlug)    
-  }
+  // componentWillReceiveProps (nextProps) {
+  //   this.fetchPost(nextProps.match.params.postSlug)
+  //   this.fetchImages(this.props.match.params.postSlug)
+  // }
 
   render () {
     return (
@@ -46,8 +46,8 @@ export class PostImage extends Component {
         <Container className="content">
 
           <div className="post-info">
-            <Card color="light">
-              <Form className="border">
+            <Card>
+              <Form>
                 <FormGroup row>
                   <Label for="idText" sm={3}>Post Id</Label>
                   <Col sm={9}>
@@ -90,7 +90,7 @@ export class PostImage extends Component {
                         ref={(ref) => { this.fileUpload = ref }}
                         onChange={(e) => this.handleUploadChange(e)} />
                     </FormGroup>
-                    <Button outline color="dark"
+                    <Button color="dark"
                       onClick={(e) => this.handleUpload(e)}>
                       Upload
                     </Button>
@@ -112,28 +112,36 @@ export class PostImage extends Component {
                   {image.metadata.filename}
                 </CardHeader>
                 <CardBody>
-                  <Form>
-                    <FormGroup row>
-                      <Label for={`image-id-${image._id}`} sm={2}>_id</Label>
-                      <Col sm={10}>
-                        <Input id={`image-id-${image._id}`} type="text" value={image._id} disabled name="_id" sm={10}></Input>
-                      </Col>
-                    </FormGroup>
-                  </Form>
-                  <Form>
-                    <FormGroup row>
-                      <Label for={`image-filename-${image._id}`} sm={2}>filename</Label>
-                      <Col sm={10}>
-                        <Input id={`image-filename-${image._id}`} type="text" name="filename" sm={10}
-                          value={image.metadata.filename}
-                          onChange={(e) => {
-                            image.name = e.target.value
-                            this.forceUpdate()
-                          }}>
-                        </Input>
-                      </Col>
-                    </FormGroup>
-                  </Form>
+                  <Row>
+                    <Col>
+                      <Form>
+                        <FormGroup>
+                          <Label for={`image-id-${image._id}`}>_id</Label>
+                          <Input id={`image-id-${image._id}`} type="text" value={image._id} disabled name="_id"></Input>
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for={`image-filename-${image._id}`}>filename</Label>
+                          <Input id={`image-filename-${image._id}`} type="text" name="filename"
+                            value={image.metadata.filename}
+                            onChange={(e) => {
+                              image.name = e.target.value
+                              this.forceUpdate()
+                            }}>
+                          </Input>
+                        </FormGroup>
+                        <Button color="dark">Update</Button>&nbsp;
+                        <Button color="danger">Delete</Button>
+                        {/* TODO */}
+                      </Form>
+                    </Col>
+                    <Col>
+                      <img src={'http://localhost:8000' + image.url}
+                        className="img-fluid img-thumbnail"
+                        alt={image.metadata.filename}>
+                      </img>
+                      {/* TODO */}
+                    </Col>
+                  </Row>
                 </CardBody>
               </Card>
             )}
@@ -167,8 +175,10 @@ export class PostImage extends Component {
     formData.append('filename', filename)
     formData.append('metadata', JSON.stringify(metadata))
     const res = PostImageApi.uploadImage(this.props.match.params.postSlug, formData)
-    console.log(res)
-    this.fetchImages()
+    this.fetchImages(this.props.match.params.postSlug)
+    this.setState({file: ''})
+    this.setState({filename: ''})
+    this.setState({previewSrc: ''})
   }
 
   handleUploadChange (e) {
