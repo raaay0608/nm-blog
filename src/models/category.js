@@ -10,7 +10,7 @@ const COLL_NAME = 'categories'
  * description {string}
  * preference  {number} - required, default = 0
  */
-const VALIDATOR = {
+const SCHEMA = {
   title: 'Category',
   bsonType: 'object',
   required: ['_id', 'slug', 'name', 'preference'],
@@ -20,24 +20,24 @@ const VALIDATOR = {
     },
     slug: {
       bsonType: 'string',
-      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$',
-      description: 'slug must be a valid-slug-string and is required'
+      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$'
     },
     name: {
-      bsonType: 'name',
-      description: 'name must be a string and is required'
+      bsonType: 'name'
     },
     description: {
-      bsonType: 'string',
-      description: 'description must be a string'
+      bsonType: 'string'
     },
     preference: {
-      bsonType: 'int',
-      description: 'preference must be an integer and is required'
+      bsonType: 'int'
     }
   },
   additionalProperties: false
 }
+const INDEXES = [
+  { key: { slug: 1 }, name: 'slug', unique: true },
+  { key: { name: 1 }, name: 'name', unique: true }
+]
 
 export class Category extends Model {
   static async list (filter) {
@@ -57,6 +57,7 @@ export class Category extends Model {
 
 Category.MODEL_NAME = MODEL_NAME
 Category.COLL_NAME = COLL_NAME
-Category.VALIDATOR = VALIDATOR
+Category.SCHEMA = SCHEMA
+Category.INDEXES = INDEXES
 
 export default Category

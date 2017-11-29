@@ -49,6 +49,15 @@ export class Model {
     return this.db.collection(this.COLL_NAME)
   }
 
+  // ======== utils ========
+  static async ensureValidator () {
+    // TODO
+  }
+
+  static async ensureIndexes () {
+    // TODO
+  }
+
   // ======== customized functions for all models ========
 
   /**
@@ -182,6 +191,14 @@ export class FileModel {
     }
     let bucket = new MongoDB.GridFSBucket(this.db, options)
     return bucket
+  }
+
+  static async ensureValidator () {
+    // TODO
+  }
+
+  static async ensureIndexes () {
+    // TODO
   }
 
   static getUploadStream (contentType, metadata = {}) {

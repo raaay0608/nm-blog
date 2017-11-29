@@ -8,7 +8,7 @@ const COLL_NAME = 'tags'
  * slug {string} - required, unique, index
  * name {string} - required, unique, index
  */
-const VALIDATOR = {
+const SCHEMA = {
   title: 'Tag',
   bsonType: 'object',
   required: ['_id', 'slug', 'name'],
@@ -18,16 +18,18 @@ const VALIDATOR = {
     },
     slug: {
       bsonType: 'string',
-      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$',
-      description: 'slug must be a valid-slug-string and is required'
+      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$'
     },
     name: {
-      bsonType: 'name',
-      description: 'name must be a string and is required'
+      sonType: 'name'
     }
   },
   additionalProperties: false
 }
+const INDEXES = [
+  { key: { slug: 1 }, name: 'slug', unique: true },
+  { key: { name: 1 }, name: 'name', unique: true }
+]
 
 class Tag extends Model {
   static async delete (filter) {
@@ -44,6 +46,7 @@ class Tag extends Model {
 
 Tag.MODEL_NAME = MODEL_NAME
 Tag.COLL_NAME = COLL_NAME
-Tag.VALIDATOR = VALIDATOR
+Tag.SCHEMA = SCHEMA
+Tag.INDEXES = INDEXES
 
 export default Tag

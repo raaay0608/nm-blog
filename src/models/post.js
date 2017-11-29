@@ -18,7 +18,7 @@ const COLL_NAME = 'posts'
  * state      {string} - required, in ['published', 'draft'], default='draft'
  * date       {Date} - required, default=now
  */
-const VALIDATOR = {
+const SCHEMA = {
   title: 'Post',
   bsonType: 'object',
   required: ['_id', 'slug', 'title', 'heroImage', 'intro', 'content', 'category', 'tags', 'state', 'date'],
@@ -28,48 +28,45 @@ const VALIDATOR = {
     },
     slug: {
       bsonType: 'string',
-      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$',
-      description: 'slug must be a valid-slug-string and is required'
+      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$'
     },
     title: {
-      bsonType: 'string',
-      description: 'title must be a string and is required'
+      bsonType: 'string'
     },
     heroImage: {
-      bsonType: 'string',
-      description: 'heroImage must be a string and represents a URL'
+      bsonType: 'string'
     },
     intro: {
-      bsonType: 'string',
-      description: 'intro must be string if exists'
+      bsonType: 'string'
     },
     content: {
-      bsonType: 'string',
-      description: 'content must be string'
+      bsonType: 'string'
     },
     category: {
-      bsonType: ['objectId', 'null'],
-      description: 'category must be a reference to Category if not null'
+      bsonType: ['objectId', 'null']
     },
     tags: {
       bsonType: 'array',
-      items: {
-        bsonType: 'objectId'
-      },
-      description: 'tags must be an array of references to Tag'
+      items: { bsonType: 'objectId' }
     },
     state: {
       bsonType: 'string', // or bool?
-      enum: ['draft', 'published'],
-      description: 'state must be either \'draft\' or \'published\''
+      enum: ['draft', 'published']
     },
     date: {
-      bsonType: 'date',
-      description: 'date must be date type'
+      bsonType: 'date'
     }
   },
   additionalProperties: false
 }
+const INDEXES = [
+  { key: { slug: 1 }, name: 'slug', unique: true },
+  { key: { title: 1 }, name: 'title', unique: true },
+  { key: { category: 1 }, name: 'category' },
+  { key: { tags: 1 }, name: 'tags' },
+  { key: { state: 1 }, name: 'state' },
+  { key: { date: 1 }, name: 'date' }
+]
 
 export class Post extends Model {
   static async create (doc) {
@@ -211,6 +208,7 @@ export class Post extends Model {
 
 Post.MODEL_NAME = MODEL_NAME
 Post.COLL_NAME = COLL_NAME
-Post.VALIDATOR = VALIDATOR
+Post.SCHEMA = SCHEMA
+Post.INDEXES = INDEXES
 
 export default Post
