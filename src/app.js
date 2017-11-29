@@ -18,7 +18,12 @@ import postRouter from '~/routes/post'
 import postImageRouter from '~/routes/post-image'
 import categoryRouter from '~/routes/category'
 import tagRouter from '~/routes/tag'
+
 import * as db from '~/models'
+import Category from '~/models/category'
+import PostImage from '~/models/post-image' // eslint-disable-line no-unused-vars
+import Post from '~/models/post'
+import Tag from '~/models/tag'
 
 export const app = new Koa()
 export default app
@@ -55,6 +60,13 @@ app.on('error', (err, ctx) => {
 })
 
 db.connect(config.get('mongo'))
+  .then(conn => {
+    return Promise.resolve(Promise.all([
+      Category.ensureValidator(),
+      Post.ensureValidator(),
+      Tag.ensureValidator()
+    ]))
+  })
   .then(conn => {
     console.log(`Server Starts`)
     app.listen('8000')

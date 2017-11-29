@@ -28,9 +28,11 @@ const SCHEMA = {
     },
     slug: {
       bsonType: 'string',
+      minLength: 1,
       pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$'
     },
     title: {
+      minLength: 1,
       bsonType: 'string'
     },
     heroImage: {
@@ -71,7 +73,9 @@ const INDEXES = [
 export class Post extends Model {
   static async create (doc) {
     // default values and basic validations
-
+    if (doc.date) {
+      doc.state = new Date(doc.state) // iso-string to Date object
+    }
     let defaultProps = {
       heroImage: '',
       intro: '',
@@ -178,8 +182,8 @@ export class Post extends Model {
   }
 
   static async modify (filter, update) {
-    if (update.hasOwnProperty('state') && !['published', 'draft'].includes(update.state)) {
-      throw new Error(`Invalid parameter {state: ${update.state}}`)
+    if (update.date) {
+      update.date = new Date(update.date) // iso-string to Date object
     }
 
     if (update.category) {
@@ -201,6 +205,7 @@ export class Post extends Model {
       }))
       update.tags = _tags.map(tag => tag._id)
     }
+
     let res = await super.modify(filter, update)
     return this.get({ _id: res._id })
   }

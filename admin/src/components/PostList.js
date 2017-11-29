@@ -13,14 +13,14 @@ export class PostList extends Component {
       posts: [], // {slug, title, heroImage, intro, content, category, tags, state, date}
       newPost: {
         slug: '',
-        title: '',
-        heroImage: '',
-        intro: '',
-        content: '',
-        category: null,
-        tags: [],
-        state: 'draft',
-        date: new Date()
+        title: ''
+        // heroImage: '',
+        // intro: '',
+        // content: '',
+        // category: null,
+        // tags: [],
+        // state: 'draft',
+        // date: new Date()
       },
       modal: false
     }
@@ -121,7 +121,6 @@ export class PostList extends Component {
   }
 
   handleCreate () {
-    this.mergeAndSetState('newPost', 'date', new Date())
     const data = this.state.newPost
     this.createPost(data)
   }

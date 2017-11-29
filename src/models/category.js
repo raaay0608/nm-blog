@@ -20,10 +20,12 @@ const SCHEMA = {
     },
     slug: {
       bsonType: 'string',
+      minLength: 1,
       pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$'
     },
     name: {
-      bsonType: 'name'
+      bsonType: 'string',
+      minLength: 1
     },
     description: {
       bsonType: 'string'

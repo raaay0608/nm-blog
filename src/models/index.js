@@ -1,7 +1,10 @@
-// TODO: Validation
 // TODO: Error Type
 
 import MongoDB, { MongoClient } from 'mongodb'
+// import Category from './category'
+// import PostImage from './post-image'
+// import Post from './post'
+// import Tag from './tag'
 
 let _db = null
 
@@ -51,7 +54,18 @@ export class Model {
 
   // ======== utils ========
   static async ensureValidator () {
-    // TODO
+    const existing = await this.db.listCollections({name: this.COLL_NAME}).toArray()
+    if (!existing || !existing.length) {
+      return this.db.createCollection(this.COLL_NAME, {
+        validator: { $jsonSchema: this.SCHEMA }
+      })
+    } else {
+      return this.db.command({
+        collMod: this.COLL_NAME,
+        validator: { $jsonSchema: this.SCHEMA },
+        validationLevel: 'strict'
+      })
+    }
   }
 
   static async ensureIndexes () {
