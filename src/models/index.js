@@ -87,7 +87,7 @@ export class Model {
   }
 
   static async ensureIndexes () {
-    // TODO
+    return this.collection.createIndexes(this.indexes)
   }
 
   // ======== customized functions for all models ========
@@ -249,7 +249,11 @@ export class FileModel {
   }
 
   static async ensureIndexes () {
-    // TODO
+    return this.ensureFileIndexes()
+  }
+
+  static async ensureFileIndexes () {
+    return this.fileCollection.createIndexes(this.fileIndexes)
   }
 
   static getUploadStream (contentType, metadata = {}) {

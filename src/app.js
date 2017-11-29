@@ -60,6 +60,8 @@ app.on('error', (err, ctx) => {
 })
 
 db.connect(config.get('mongo'))
+  // TODO: could this be more elegant ..?
+  // may place somewhere else
   .then(conn => {
     return Promise.resolve(Promise.all([
       Category.ensureValidator(),
@@ -68,7 +70,15 @@ db.connect(config.get('mongo'))
       PostImage.ensureValidator()
     ]))
   })
-  .then(conn => {
+  .then(() => {
+    return Promise.all([
+      Category.ensureIndexes(),
+      Post.ensureIndexes(),
+      Tag.ensureIndexes(),
+      Category.ensureIndexes()
+    ])
+  })
+  .then(() => {
     console.log(`Server Starts`)
     app.listen('8000')
   })

@@ -1,5 +1,5 @@
 import { Model } from '~/models/index'
-import Post from './post'
+import Post from '~/models/post'
 
 /*
  * slug {string} - required, unique, index
