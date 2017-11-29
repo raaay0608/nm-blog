@@ -250,10 +250,6 @@ export class FileModel {
     return this.getDownloadStreamById(fileNode._id)
   }
 
-  // static async list (metadata = {}) {
-  //   return this.fileCollection.find({ metadata }).toArray()
-  // }
-
   static async list (query) {
     return this.fileCollection.find(query).toArray()
   }
@@ -275,14 +271,6 @@ export class FileModel {
     return file
   }
 
-  // static async getByMetadata (metadata = {}) {
-  //   const file = await this.fileCollection.findOne({ metadata })
-  //   if (!file) {
-  //     throw new Error('Not found')
-  //   }
-  //   return file
-  // }
-
   static async modifyFileInfo (filter, update) {
     // TODO: throw Error if not found
     const options = { returnOriginal: false }
@@ -295,8 +283,7 @@ export class FileModel {
 
   static async deleteById (id) {
     // TODO: throw Error if not found
-    const res = this.bucket.delete(MongoDB.ObjectId(id))
-    return res
+    return this.bucket.delete(MongoDB.ObjectId(id))
   }
 
   static async deleteOne (filter) {
@@ -307,18 +294,8 @@ export class FileModel {
     return this.deleteById(fileNode._id)
   }
 
-  // static async deleteOneByMetadata (metadata = {}) {
-  //   const fileNode = await this.fileCollection.findOne({ metadata })
-  //   if (!fileNode) {
-  //     throw new Error('Not found')
-  //   }
-  //   return this.deleteByIdById(fileNode._id)
-  // }
-
-  // static async deleteManyByMetadata (metadata = {}) {
-  //   const fileNodes = await this.fileCollection.find({ metadata }).toArray()
-  //   return Promise.all(fileNodes.map(fileNode => {
-  //     return this.bucket.delete(fileNode._id)
-  //   }))
-  // }
+  static async deleteMany (filter) {
+    const files = await this.fileCollection.find(filter).toArray()
+    return Promise.all(files.map(file => this.deleteById(file._id)))
+  }
 }

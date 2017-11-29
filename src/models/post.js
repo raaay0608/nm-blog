@@ -1,7 +1,8 @@
 import MongoDB from 'mongodb'
 import { Model } from '~/models/index'
-import Category from '~/models/category' // eslint-disable-line no-unused-vars
-import Tag from '~/models/tag' // eslint-disable-line no-unused-vars
+import Category from '~/models/category'
+import Tag from '~/models/tag'
+import PostImage from '~/models/post-image'
 
 const ObjectId = MongoDB.ObjectId
 
@@ -208,6 +209,13 @@ export class Post extends Model {
 
     let res = await super.modify(filter, update)
     return this.get({ _id: res._id })
+  }
+
+  static async delete (filter) {
+    const post = await super.get(filter)
+    const delImgRes = await PostImage.deleteMany({'metadata.post': post._id})
+    const delPostRes = await super.delete(filter)
+    return { post: delPostRes, images: delImgRes }
   }
 }
 

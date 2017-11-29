@@ -68,10 +68,8 @@ router.delete('/posts/:postSlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
     case 'json':
       const postSlug = ctx.params.postSlug
-      const post = await Post.delete({ slug: postSlug })
-      ctx.body = {
-        post: post
-      }
+      const delResult = await Post.delete({ slug: postSlug })
+      ctx.body = delResult
       break
     default:
       ctx.throw(406)
