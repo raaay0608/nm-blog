@@ -13,7 +13,6 @@ router.get('/posts/:postSlug/images', async function (ctx, next) {
     case 'json':
       const post = await Post.get({ slug: ctx.params.postSlug }) // check if posts exists
       const imageDocs = await PostImage.list({ 'metadata.post': post._id })
-      // const imageDocs = await PostImage.list()
       imageDocs.map(imageDoc => {
         imageDoc.url = `/posts/${post.slug}/images/${imageDoc.metadata.filename}`
       })

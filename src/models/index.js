@@ -208,7 +208,22 @@ export class FileModel {
   }
 
   static async ensureValidator () {
-    // TODO
+    return this.ensureFileValidator()
+  }
+
+  static async ensureFileValidator () {
+    const existing = await this.db.listCollections({name: this.fileCollectionName}).toArray()
+    if (!existing || !existing.length) {
+      return this.db.createCollection(this.fileCollectionName, {
+        validator: { $jsonSchema: this.FILES_SCHEMA }
+      })
+    } else {
+      return this.db.command({
+        collMod: this.fileCollectionName,
+        validator: { $jsonSchema: this.FILES_SCHEMA },
+        validationLevel: 'strict'
+      })
+    }
   }
 
   static async ensureIndexes () {

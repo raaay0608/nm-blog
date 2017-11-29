@@ -21,7 +21,7 @@ import tagRouter from '~/routes/tag'
 
 import * as db from '~/models'
 import Category from '~/models/category'
-import PostImage from '~/models/post-image' // eslint-disable-line no-unused-vars
+import PostImage from '~/models/post-image'
 import Post from '~/models/post'
 import Tag from '~/models/tag'
 
@@ -64,7 +64,8 @@ db.connect(config.get('mongo'))
     return Promise.resolve(Promise.all([
       Category.ensureValidator(),
       Post.ensureValidator(),
-      Tag.ensureValidator()
+      Tag.ensureValidator(),
+      PostImage.ensureValidator()
     ]))
   })
   .then(conn => {

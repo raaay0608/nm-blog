@@ -14,7 +14,9 @@ const FILES_SCHEMA = {
           bsonType: 'objectId'
         },
         filename: {
-          bsonType: 'string'
+          bsonType: 'string',
+          minLength: 1,
+          pattern: '^[A-Za-z0-9]+(?:[-.][A-Za-z0-9]+)*$'
         }
       },
       additionalProperties: false // restrict allowed fields at the moment

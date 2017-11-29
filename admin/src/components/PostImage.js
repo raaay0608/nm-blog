@@ -177,7 +177,7 @@ export class PostImage extends Component {
     formData.append('file', file)
     formData.append('filename', filename)
     formData.append('metadata', JSON.stringify(metadata))
-    const res = PostImageApi.uploadImage(this.props.match.params.postSlug, formData)
+    const res = await PostImageApi.uploadImage(this.props.match.params.postSlug, formData)
     this.fetchImages(this.props.match.params.postSlug)
     this.setState({file: ''})
     this.setState({filename: ''})
