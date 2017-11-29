@@ -1,40 +1,42 @@
 import { FileModel } from '~/models/index'
 
-const BUCKET_NAME = 'posts.images'
-const FILES_SCHEMA = {
-  title: 'PostImage',
-  bsonType: 'object',
-  required: ['metadata'],
-  properties: {
-    metadata: {
+export class PostImage extends FileModel {
+  static get bucketName () {
+    return 'post.images'
+  }
+
+  static get filesSchema () {
+    return {
+      title: 'PostImage',
       bsonType: 'object',
-      required: ['post', 'filename'],
+      required: ['metadata'],
       properties: {
-        post: {
-          bsonType: 'objectId'
-        },
-        filename: {
-          bsonType: 'string',
-          minLength: 1,
-          pattern: '^[A-Za-z0-9]+(?:[-.][A-Za-z0-9]+)*$'
+        metadata: {
+          bsonType: 'object',
+          required: ['post', 'filename'],
+          properties: {
+            post: {
+              bsonType: 'objectId'
+            },
+            filename: {
+              bsonType: 'string',
+              minLength: 1,
+              pattern: '^[A-Za-z0-9]+(?:[-.][A-Za-z0-9]+)*$'
+            }
+          },
+          additionalProperties: false // restrict allowed fields at the moment
         }
       },
-      additionalProperties: false // restrict allowed fields at the moment
+      additionalProperties: true // allow extra fields for GridFS
     }
-  },
-  additionalProperties: true // allow extra fields for GridFS
+  }
+
+  static get filesIndexes () {
+    return [
+      { key: { 'metadata.post': 1 }, name: 'post' },
+      { key: { 'metadata.post': 1, 'metadata.filename': 1 }, name: 'post_filename', unique: true }
+    ]
+  }
 }
-const FILES_INDEXES = [
-  { key: { 'metadata.post': 1 }, name: 'post' },
-  { key: { 'metadata.post': 1, 'metadata.filename': 1 }, name: 'post_filename', unique: true }
-]
-
-export class PostImage extends FileModel {
-
-}
-
-PostImage.BUCKET_NAME = BUCKET_NAME
-PostImage.FILES_SCHEMA = FILES_SCHEMA
-PostImage.FILES_INDEXES = FILES_INDEXES
 
 export default PostImage

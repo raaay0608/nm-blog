@@ -6,8 +6,6 @@ import PostImage from '~/models/post-image'
 
 const ObjectId = MongoDB.ObjectId
 
-const MODEL_NAME = 'Post'
-const COLL_NAME = 'posts'
 /*
  * slug       {string} - required, unique, index
  * title      {string} - required, unique(?), index
@@ -19,59 +17,72 @@ const COLL_NAME = 'posts'
  * state      {string} - required, in ['published', 'draft'], default='draft'
  * date       {Date} - required, default=now
  */
-const SCHEMA = {
-  title: 'Post',
-  bsonType: 'object',
-  required: ['_id', 'slug', 'title', 'heroImage', 'intro', 'content', 'category', 'tags', 'state', 'date'],
-  properties: {
-    _id: {
-      bsonType: 'objectId'
-    },
-    slug: {
-      bsonType: 'string',
-      minLength: 1,
-      pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$'
-    },
-    title: {
-      minLength: 1,
-      bsonType: 'string'
-    },
-    heroImage: {
-      bsonType: 'string'
-    },
-    intro: {
-      bsonType: 'string'
-    },
-    content: {
-      bsonType: 'string'
-    },
-    category: {
-      bsonType: ['objectId', 'null']
-    },
-    tags: {
-      bsonType: 'array',
-      items: { bsonType: 'objectId' }
-    },
-    state: {
-      bsonType: 'string', // or bool?
-      enum: ['draft', 'published']
-    },
-    date: {
-      bsonType: 'date'
-    }
-  },
-  additionalProperties: false
-}
-const INDEXES = [
-  { key: { slug: 1 }, name: 'slug', unique: true },
-  { key: { title: 1 }, name: 'title', unique: true },
-  { key: { category: 1 }, name: 'category' },
-  { key: { tags: 1 }, name: 'tags' },
-  { key: { state: 1 }, name: 'state' },
-  { key: { date: 1 }, name: 'date' }
-]
-
 export class Post extends Model {
+  static get modelName () {
+    return 'Post'
+  }
+
+  static get collName () {
+    return 'posts'
+  }
+
+  static get schema () {
+    return {
+      title: 'Post',
+      bsonType: 'object',
+      required: ['_id', 'slug', 'title', 'heroImage', 'intro', 'content', 'category', 'tags', 'state', 'date'],
+      properties: {
+        _id: {
+          bsonType: 'objectId'
+        },
+        slug: {
+          bsonType: 'string',
+          minLength: 1,
+          pattern: '^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$'
+        },
+        title: {
+          minLength: 1,
+          bsonType: 'string'
+        },
+        heroImage: {
+          bsonType: 'string'
+        },
+        intro: {
+          bsonType: 'string'
+        },
+        content: {
+          bsonType: 'string'
+        },
+        category: {
+          bsonType: ['objectId', 'null']
+        },
+        tags: {
+          bsonType: 'array',
+          items: { bsonType: 'objectId' }
+        },
+        state: {
+          bsonType: 'string', // or bool?
+          enum: ['draft', 'published']
+        },
+        date: {
+          bsonType: 'date'
+        }
+      },
+      additionalProperties: false
+    }
+  }
+
+  static get indexes () {
+    return [
+      { key: { slug: 1 }, name: 'slug', unique: true },
+      { key: { title: 1 }, name: 'title', unique: true },
+      { key: { category: 1 }, name: 'category' },
+      { key: { tags: 1 }, name: 'tags' },
+      { key: { state: 1 }, name: 'state' },
+      { key: { date: 1 }, name: 'date' }
+    ]
+  }
+
   static async create (doc) {
     // default values and basic validations
     if (doc.date) {
@@ -119,7 +130,7 @@ export class Post extends Model {
       { $match: query },
       { $lookup:
         {
-          from: Category.COLL_NAME,
+          from: Category.collName,
           localField: 'category',
           foreignField: '_id',
           as: 'category' // overwrite
@@ -132,7 +143,7 @@ export class Post extends Model {
       },
       { $lookup:
         {
-          from: Tag.COLL_NAME,
+          from: Tag.collName,
           localField: 'tags',
           foreignField: '_id',
           as: 'tags' // overwrite
@@ -156,7 +167,7 @@ export class Post extends Model {
     pipeline.push(
       { $lookup:
         {
-          from: Category.COLL_NAME,
+          from: Category.collName,
           localField: 'category',
           foreignField: '_id',
           as: 'category' // overwrite
@@ -169,7 +180,7 @@ export class Post extends Model {
       },
       { $lookup:
         {
-          from: Tag.COLL_NAME,
+          from: Tag.collName,
           localField: 'tags',
           foreignField: '_id',
           as: 'tags' // overwrite
@@ -218,10 +229,5 @@ export class Post extends Model {
     return { post: delPostRes, images: delImgRes }
   }
 }
-
-Post.MODEL_NAME = MODEL_NAME
-Post.COLL_NAME = COLL_NAME
-Post.SCHEMA = SCHEMA
-Post.INDEXES = INDEXES
 
 export default Post

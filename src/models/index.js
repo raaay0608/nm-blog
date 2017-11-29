@@ -49,20 +49,38 @@ export class Model {
   }
 
   static get collection () {
-    return this.db.collection(this.COLL_NAME)
+    return this.db.collection(this.collName)
+  }
+
+  // ======== to be overwrited ========
+
+  static get modelName () {
+    throw new Error('Getter [modelName] does not implemented')
+  }
+
+  static get collName () {
+    throw new Error('Getter [collName] does not implemented')
+  }
+
+  static get schema () {
+    throw new Error('Getter [schema] does not implemented')
+  }
+
+  static get indexes () {
+    throw new Error('Getter [indexes] does not implemented')
   }
 
   // ======== utils ========
   static async ensureValidator () {
-    const existing = await this.db.listCollections({name: this.COLL_NAME}).toArray()
+    const existing = await this.db.listCollections({name: this.collName}).toArray()
     if (!existing || !existing.length) {
-      return this.db.createCollection(this.COLL_NAME, {
-        validator: { $jsonSchema: this.SCHEMA }
+      return this.db.createCollection(this.collName, {
+        validator: { $jsonSchema: this.schema }
       })
     } else {
       return this.db.command({
-        collMod: this.COLL_NAME,
-        validator: { $jsonSchema: this.SCHEMA },
+        collMod: this.collName,
+        validator: { $jsonSchema: this.schema },
         validationLevel: 'strict'
       })
     }
@@ -182,12 +200,16 @@ export class FileModel {
     return _db
   }
 
+  static get bucketName () {
+    throw new Error('Getter [bucketName] does not implemented')
+  }
+
   static get fileCollectionName () {
-    return this.BUCKET_NAME + '.files'
+    return this.bucketName + '.files'
   }
 
   static get chunkCollectionName () {
-    return this.BUCKET_NAME + '.chunks'
+    return this.bucketName + '.chunks'
   }
 
   static get fileCollection () {
@@ -200,7 +222,7 @@ export class FileModel {
 
   static get bucket () {
     const options = {
-      bucketName: this.BUCKET_NAME,
+      bucketName: this.bucketName,
       chunkSizeBytes: 255 * 1024
     }
     let bucket = new MongoDB.GridFSBucket(this.db, options)
@@ -215,12 +237,12 @@ export class FileModel {
     const existing = await this.db.listCollections({name: this.fileCollectionName}).toArray()
     if (!existing || !existing.length) {
       return this.db.createCollection(this.fileCollectionName, {
-        validator: { $jsonSchema: this.FILES_SCHEMA }
+        validator: { $jsonSchema: this.filesSchema }
       })
     } else {
       return this.db.command({
         collMod: this.fileCollectionName,
-        validator: { $jsonSchema: this.FILES_SCHEMA },
+        validator: { $jsonSchema: this.filesSchema },
         validationLevel: 'strict'
       })
     }
