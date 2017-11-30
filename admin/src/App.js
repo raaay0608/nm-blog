@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { HashRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 import Index from './components/Index'
 import Login from './components/Login'
@@ -14,29 +14,45 @@ import TagList from './components/TagList'
 import Headbar from './components/layouts/Header'
 
 class App extends Component {
+  constructor () {
+    super()
+    this.requireAuth = this.requireAuth.bind(this)
+  }
+
+  logout (nextState, replace) {
+    sessionStorage.removeItem('token')
+  }
+
+  requireAuth (nextState, replace, callback) {
+    const token = sessionStorage.get('token')
+    if (!token) {
+      replace('/login')
+    }
+  }
+
   render () {
     return (
       <HashRouter>
         <div className="app">
           <Headbar/>
 
-          <Route exact path="/" component={Index}/>
+          <Route exact path="/" component={Login}/>
           <Route path="/login" component={Login}/>
 
           <Switch>
-            <Route path="/posts/:postSlug/images" component={PostImage}/>
-            <Route path="/posts/:postSlug" component={Post}/>
-            <Route path="/posts" component={PostList}/>
+            <PrivateRoute path="/posts/:postSlug/images" component={PostImage}/>
+            <PrivateRoute path="/posts/:postSlug" component={Post}/>
+            <PrivateRoute path="/posts" component={PostList}/>
           </Switch>
 
           <Switch>
-            <Route path="/categories/:categorySlug" component={Category}/>
-            <Route path="/categories" component={CategoryList}/>
+            <PrivateRoute path="/categories/:categorySlug" component={Category}/>
+            <PrivateRoute path="/categories" component={CategoryList}/>
           </Switch>
 
           <Switch>
-            <Route path="/tags/:tagSlug" component={Tag}/>
-            <Route path="/tags" component={TagList}/>
+            <PrivateRoute path="/tags/:tagSlug" component={Tag}/>
+            <PrivateRoute path="/tags" component={TagList}/>
           </Switch>
 
         </div>
@@ -44,5 +60,18 @@ class App extends Component {
     )
   }
 }
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={props => (
+    sessionStorage.getItem('token') ? (
+      <Component {...props}/>
+    ) : (
+      <Redirect to={{
+        pathname: '/login',
+        state: { from: props.location }
+      }}/>
+    )
+  )}/>
+)
 
 export default App

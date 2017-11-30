@@ -40,9 +40,9 @@ function getHeaders (type = 'json') {
       break
     }
   }
-  if (localStorage.getItem('token')) {
-    headers.append('Authorization', `Bearer ${localStorage.getItem('token')}`)
-    headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+  if (sessionStorage.getItem('token')) {
+    // headers.append('Authorization', `Bearer ${sessionStorage.getItem('token')}`)
+    headers['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`
   }
   return headers
 }
