@@ -5,7 +5,7 @@ export const router = new KoaRouter()
 router.get('/', async (ctx, next) => {
   switch (ctx.accepts('html')) {
     case 'html':
-      break
+      return ctx.render('index', {})
     default:
       ctx.throw(406)
   }

@@ -13,15 +13,22 @@
   "author": "raaay0608",
   "license": "MIT",
   "nodemonConfig": {
-    "ignore": ["admin/*"],
-	"delay": "1000"
+    "ignore": [
+      "admin/*"
+    ],
+    "delay": "1000"
   },
   "dependencies": {
     "@koa/cors": "^2.2.1",
+    "bootstrap": "^4.0.0-beta.2",
     "busboy": "^0.2.14",
     "config": "^1.28.1",
     "debug": "^3.1.0",
     "ejs": "^2.5.7",
+    "font-awesome": "^4.7.0",
+    "github-markdown-css": "^2.9.0",
+    "hljs": "^6.2.3",
+    "jquery": "^3.2.1",
     "jsonwebtoken": "^8.1.0",
     "koa": "^2.4.1",
     "koa-body": "^2.5.0",
@@ -30,12 +37,15 @@
     "koa-json": "^2.0.2",
     "koa-jwt": "^3.2.2",
     "koa-logger": "^3.1.0",
+    "koa-mount": "^3.0.0",
     "koa-onerror": "^4.0.0",
     "koa-router": "^7.3.0",
     "koa-static": "^4.0.2",
     "koa-views": "^6.1.2",
     "mongodb": "^2.2.33",
-    "multy": "^0.1.5"
+    "multy": "^0.1.5",
+    "normalize.css": "^7.0.0",
+    "popper.js": "^1.12.9"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

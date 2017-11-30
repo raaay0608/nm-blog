@@ -3,13 +3,15 @@ import config from 'config'
 import Koa from 'koa'
 import KoaBody from 'koa-body'
 import KoaViews from 'koa-views'
-import KoaStatic from 'koa-static'
+import KoaMount from 'koa-mount'
 import KoaJson from 'koa-json'
 import KoaLogger from 'koa-logger'
 import KoaOnError from 'koa-onerror'
 import KoaJWT from 'koa-jwt'
 import cors from '@koa/cors'
 import Multy from 'multy'
+
+import staticServer from '~/statics'
 
 import auth from '~/middlewares/auth'
 import indexRouter from '~/routes/index'
@@ -42,7 +44,7 @@ app.use(KoaJWT({ secret: config.get('secret'), passthrough: true }))
 app.use(auth)
 
 // static files
-app.use(KoaStatic(path.join(__dirname, 'public')))
+app.use(KoaMount('/statics', staticServer))
 
 // views
 app.use(KoaViews(path.join(__dirname, 'views'), {extension: 'ejs'}))
