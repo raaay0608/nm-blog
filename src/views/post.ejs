@@ -4,25 +4,16 @@
   <%- include('includes/head-tags') %>
   <%- include('includes/commons') %>
   <%- include('includes/custom-styles') %>
-  <title>raaay's </title>
-  <base href="/">
+  <title><%= post.title %> - raaay's</title>
+  <base href="/posts/<%= post.slug %>/">
 </head>
 <body>
 
   <%- include('components/side-nav') %>
 
   <div class="container-fluid px-5">
-
-    <%# post feed list %>
-    <div class="post-list">
-      <% for (const post of posts) { %>
-        <%- include('components/post-feed', { post }) %>
-      <% } %>
-    </div>
-
-    <%# pagination %>
-
+    <%- include('components/post', { post }) %>
   </div>
-  
+
 </body>
 </html>

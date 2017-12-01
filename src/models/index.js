@@ -253,7 +253,7 @@ export class FileModel {
   }
 
   static async ensureFileIndexes () {
-    return this.fileCollection.createIndexes(this.fileIndexes)
+    return this.fileCollection.createIndexes(this.filesIndexes)
   }
 
   static getUploadStream (contentType, metadata = {}) {

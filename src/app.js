@@ -77,7 +77,7 @@ db.connect(config.get('mongo'))
       Category.ensureIndexes(),
       Post.ensureIndexes(),
       Tag.ensureIndexes(),
-      Category.ensureIndexes()
+      PostImage.ensureIndexes()
     ])
   })
   .then(() => {

@@ -39,8 +39,8 @@ staticServer.use(mount('/font-awesome', KoaStatic('./node_modules/font-awesome')
 staticServer.use(mount('/github-markdown-css', KoaStatic('./node_modules/github-markdown-css')))
 
 /**
- * /statics/hljs/styles/*.css
+ * /statics/highlight.js/styles/*.css
  */
-staticServer.use(mount('/hljs', KoaStatic('./node_modules/hljs')))
+staticServer.use(mount('/highlight.js', KoaStatic('./node_modules/highlight.js')))
 
 export default staticServer

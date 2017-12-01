@@ -1,7 +1,7 @@
-<div class="card post-feed">
+<div class="card post-feed my-4">
 
-  <div class="card-body">
-      <a href="/post/<%= post.slug %>">
+  <div class="card-body p-4">
+      <a href="/posts/<%= post.slug %>">
         <h2 class="post-feed-title"><%= post.title %></h2>
         <p class="post-feed-intro">
           <%= post.intro %>
@@ -9,14 +9,15 @@
       </a>
   </div><%# end: "card-body" %>
 
-  <div class="card-footer">
+  <div class="card-footer p-4">
+
       <%# date %>
       <div class="d-inline">
         <i class="fa fa-calendar"></i>
         <% if (post.date) { %>
           <span><%= post.date.toLocaleDateString() %></span>
         <% } else { %>
-          <span>--</span>
+          <span>---</span>
         <% } %>
       </div>
 
@@ -26,7 +27,7 @@
         <% if (post.category) { %>
           <span><a href="#"><%= post.category.name %></a></span>
         <% } else { %>
-          <span>--</span>
+          <span>---</span>
         <% } %>
       </div>
       
@@ -38,8 +39,9 @@
                <span><a href="#"><%= tag.name %></a></span>
         <%   } %>
         <% } else { %>
-          <span>--</span>
+          <span>---</span>
         <% } %>
+      </div>
     </div><%# end: "card-footer" %>
 
 </div><%# end: "card" %>
