@@ -1,0 +1,7 @@
+body {
+  background-color: rgb(206, 206, 214);
+}
+
+a, a:hover, a:link, a:visited {
+  color: inherit;
+}

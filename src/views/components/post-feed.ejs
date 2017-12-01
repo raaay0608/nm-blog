@@ -1,0 +1,45 @@
+<div class="card post-feed">
+
+  <div class="card-body">
+      <a href="/post/<%= post.slug %>">
+        <h2 class="post-feed-title"><%= post.title %></h2>
+        <p class="post-feed-intro">
+          <%= post.intro %>
+        </p>
+      </a>
+  </div><%# end: "card-body" %>
+
+  <div class="card-footer">
+      <%# date %>
+      <div class="d-inline">
+        <i class="fa fa-calendar"></i>
+        <% if (post.date) { %>
+          <span><%= post.date.toLocaleDateString() %></span>
+        <% } else { %>
+          <span>--</span>
+        <% } %>
+      </div>
+
+      <%# category %>
+      <div class="d-inline">
+        <i class="fa fa-folder-open"></i>
+        <% if (post.category) { %>
+          <span><a href="#"><%= post.category.name %></a></span>
+        <% } else { %>
+          <span>--</span>
+        <% } %>
+      </div>
+      
+      <%# tags %>
+      <div class="d-inline">
+        <i class="fa fa-tags"></i>
+        <% if (post.tags.length) {
+             for (const [idx, tag] of post.tags.entries()) { %>
+               <span><a href="#"><%= tag.name %></a></span>
+        <%   } %>
+        <% } else { %>
+          <span>--</span>
+        <% } %>
+    </div><%# end: "card-footer" %>
+
+</div><%# end: "card" %>
