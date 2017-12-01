@@ -13,6 +13,16 @@
 
   <div class="container-fluid p-5">
 
+    <%# post feed list %>
+    <div class="post-list">
+      <% for (const post of posts) { %>
+        <%- include('components/post-feed', { post }) %>
+      <% } %>
+    </div>
+
+    <%# pagination %>
+    <%- include('components/pagination', { page, total }) %>    
+
   </div>
   
 </body>

@@ -1,15 +1,21 @@
 <div class="card post-feed my-4">
 
-  <div class="card-body p-4">
+  <% if (post.heroImage) { %>
+  <a href="/posts/<%= post.slug %>">
+    <img class="card-img-top" src="<%= `posts/${post.slug}/${post.heroImage}` %>" alt=""></img>
+  </a>
+  <% } %>
+
+  <div class="card-body">
       <a href="/posts/<%= post.slug %>">
         <h2 class="post-feed-title"><%= post.title %></h2>
-        <p class="post-feed-intro">
+        <div class="post-feed-intro">
           <%= post.intro %>
-        </p>
+        </div>
       </a>
   </div><%# end: "card-body" %>
 
-  <div class="card-footer p-4">
+  <div class="card-footer">
 
       <%# date %>
       <div class="d-inline">

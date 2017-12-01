@@ -143,6 +143,10 @@ export class Model {
     return this.collection.aggregate(pipeline, options)
   }
 
+  static async count (query, options) {
+    return this.collection.count(query, options)
+  }
+
   static async deleteOne (filter, options) {
     // { n: 1, ok: 1}
     return this.collection.deleteOne(filter, options)

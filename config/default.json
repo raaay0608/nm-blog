@@ -5,5 +5,7 @@
     "admin": {
         "username": "admin",
         "password": "password"
-    }
+    },
+
+    "postsPerPage": 10
 }

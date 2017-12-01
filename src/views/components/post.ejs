@@ -1,10 +1,13 @@
-<div class="card post my-4">
+<div class="card post my-5">
 
-  <div class="card-header p-4">
-  </div>
+  <% if (post.heroImage) { %>
+    <img class="card-img-top" src="<%= post.heroImage %>" alt=""></img>
+  <% } %>
 
-  <div class="card-body p-4">
+  <%# <div class="card-header"> %>
+  <%# </div> %>
 
+  <div class="card-body">
     <div class="post-title">
       <h2><%= post.title %></h2>
     </div>
