@@ -1,23 +1,38 @@
-.post-feed .card-body .post-feed-title {
-  /* font-size: 2rem; */
+.post-feed {
+  /* y-margin between each card */
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.post-feed .card-body .post-feed-intro {
-  /* font-size: 1rem; */
+.post-feed .card-body {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .post-feed .card-footer {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.post-feed .sep {
+  width: 10rem;
+}
+
+/* sm */
+@media (min-width: 576px) {
 
 }
 
-@media (min-width: 576px) {
+/* md */
+@media (min-width: 768px) {
   .post-feed {
-
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
   }
-}
-
-@media (min-width: 576px) {
-  
+  .post-feed .card-body, .post-feed .card-footer {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
 }
 
 /* lg */
@@ -27,5 +42,5 @@
 
 /* xs */
 @media (min-width: 1200px) {
-  
+
 }

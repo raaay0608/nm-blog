@@ -1,11 +1,12 @@
-.pagi .card {
-  margin: 0 !important;
+.pagi {
+  margin: 0;
+  margin-top: 1rem;
   padding: 0 !important;
 }
 
 .pagi .card-body {
-  margin: 0 !important;
-  padding: 0 !important;
+  background-color: rgba(0,0,0,.03);
+  
 }
 
 .pagi ul {
@@ -16,4 +17,22 @@
 .pagi li {
   margin: 0 !important;
   padding: 0 !important;
+}
+
+.group-pagination {
+  margin: 0;
+}
+
+.btn-pagination {
+  margin: 0;
+  border-radius: 0 !important;
+}
+
+.btn-pagination:hover {
+  background-color: rgba(0,0,0,.1);
+}
+
+/* TODO: only works for Firefox */
+.btn-pagination.disabled {
+  color: rgba(160,160,160);
 }

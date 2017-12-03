@@ -25,7 +25,7 @@ body {
   body {
     padding-top: 0; /* no pd-top when nav bar is left-fixed */
     /* padding-left: 20rem; */
-    margin-left: 20rem;
+    margin-left: 22rem;
   }
 }
 
@@ -37,7 +37,7 @@ body {
     left: 0;
     display: flex;
     flex-direction: column;
-    width: 20rem;
+    width: 22rem;
     height: 100vh;
   }
 
@@ -76,5 +76,5 @@ body {
 }
 
 .bg-primary {
-  background-color: rgb(65, 72, 80) !important;
+  background-color: rgba(65, 72, 80, 0.85) !important;
 }

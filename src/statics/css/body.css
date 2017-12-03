@@ -1,8 +1,26 @@
 body {
-  /* padding-top: 54px; */
-  background-color: rgb(206, 206, 214);
+  background-color: rgba(65, 72, 80, 0.93);
+  background-image: url('/statics/img/sunset.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
-a, a:hover, a:link, a:visited {
+.container-fluid {
+  height: 100%;
+}
+
+a, a:link, a:visited, a:hover, a:active {
   color: inherit;
+}
+
+.card {
+  border-radius: 0 !important;
+}
+
+@media (min-width: 768px) {
+  .container-fluid {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 }

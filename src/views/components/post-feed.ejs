@@ -8,14 +8,14 @@
 
   <div class="card-body">
       <a href="/posts/<%= post.slug %>">
-        <h2 class="post-feed-title"><%= post.title %></h2>
-        <div class="post-feed-intro">
+        <h2 class="text-dark post-feed-title"><%= post.title %></h2>
+        <div class="text-secondary post-feed-intro">
           <%= post.intro %>
         </div>
       </a>
   </div><%# end: "card-body" %>
 
-  <div class="card-footer">
+  <div class="text-secondary card-footer">
 
       <%# date %>
       <div class="d-inline">
@@ -26,6 +26,7 @@
           <span>---</span>
         <% } %>
       </div>
+      &nbsp;
 
       <%# category %>
       <div class="d-inline">
@@ -36,6 +37,7 @@
           <span>---</span>
         <% } %>
       </div>
+      &nbsp;      
       
       <%# tags %>
       <div class="d-inline">
@@ -48,6 +50,8 @@
           <span>---</span>
         <% } %>
       </div>
+      &nbsp;
+      
     </div><%# end: "card-footer" %>
 
 </div><%# end: "card" %>
