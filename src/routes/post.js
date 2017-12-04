@@ -31,11 +31,11 @@ router.get('/posts', async function (ctx, next) {
       break
     }
     case 'html': {
+      // TODO: should error (404) when `page` is greater than `total`
       const page = Number(ctx.query.page) || 1
       const [skip, limit] = [(page - 1) * config.get('postsPerPage'), config.get('postsPerPage')]
       const posts = await Post.list({ state: 'published' }, { skip, limit })
       const total = Math.ceil((await Post.count({ state: 'published' })) / config.get('postsPerPage'))
-      console.log({page, total})
       await ctx.render('post-list', { posts, page, total })
       break
     }

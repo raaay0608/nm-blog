@@ -4,23 +4,63 @@
   <img class="card-img-top" src="<%= post.heroImage %>" alt=""></img>
   <% } %>
 
+  <div class="card-header">
+    <%# title %>
+    <div class="post-title text-dark">
+      <h1><%= post.title %></h1>
+    </div>
+
+    <div class="post-intro text-secondary">
+      <div><%= post.intro %></div>
+    </div>
+  </div><%# end: "card-header" %>
+
   <div class="card-body">
-    <div class="post-title">
-      <h2><%= post.title %></h2>
-    </div>
-
-    <div class="post-info">
-    </div>
-
     <div class="post-content">
       <div class="markdown-body">
         <%- post.mdContent %>
       </div>
     </div>
-
-  </div>
+  </div><%# end: "card-body" %>
 
   <div class="card-footer">
-  </div>
+    <%# date, category, tags %>    
+    <div class="post-info text-secondary">
+      <div class="d-inline">
+        <i class="fa fa-calendar"></i>
+        <% if (post.date) { %>
+          <span><%= post.date.toLocaleDateString() %></span>
+        <% } else { %>
+          <span>----</span>
+        <% } %>
+      </div>
+      &nbsp;
+
+      <%# category %>
+      <div class="d-inline">
+        <i class="fa fa-folder-open"></i>
+        <% if (post.category) { %>
+          <span><a><%= post.category.name %></a></span>
+        <% } else { %>
+          <span>----</span>
+        <% } %>
+      </div>
+      &nbsp;
+
+      <%# tags %>
+      <div class="d-inline">
+        <i class="fa fa-tags"></i>
+        <% if (post.tags.length) {
+             for (const [idx, tag] of post.tags.entries()) { %>
+               <span><a><%= tag.name %></a></span>
+        <%   } %>
+        <% } else { %>
+          <span>----</span>
+        <% } %>
+      </div>
+      &nbsp;
+      
+    </div>
+  </div><%# end: "card-footer" %>
 
 </div>
