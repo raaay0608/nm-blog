@@ -1,5 +1,5 @@
 import MongoDB from 'mongodb'
-import { Model } from '~/models/index'
+import { Model, DoesNotExist } from '~/models/index'
 import Category from '~/models/category'
 import Tag from '~/models/tag'
 import PostImage from '~/models/post-image'
@@ -150,7 +150,11 @@ export class Post extends Model {
         }
       }
     ], { cursor: { batchSize: 1 } })
-    return cursor.next()
+    const doc = await cursor.next()
+    if (!doc) {
+      throw new DoesNotExist('Not found')
+    }
+    return doc
   }
 
   static async list (filter = {}, {skip = 0, limit = 0} = {}) {

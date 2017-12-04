@@ -105,7 +105,7 @@ export class Model {
   static async get (query) {
     const doc = await this.collection.findOne(query)
     if (!doc) {
-      throw new Error('Not found')
+      throw new DoesNotExist('not found')
     }
     return doc
   }
@@ -124,7 +124,7 @@ export class Model {
   static async modify (filter, update) {
     const res = await this.findOneAndUpdate(filter, { $set: update }, { returnOriginal: false })
     if (!res.value) {
-      throw new Error('Not found')
+      throw new DoesNotExist('not found')
     }
     return res.value
   }
@@ -132,7 +132,7 @@ export class Model {
   static async delete (filter) {
     let res = await this.findOneAndDelete(filter)
     if (!res.value) {
-      throw new Error('Not Found') // should 404
+      throw new DoesNotExist('not found')
     }
     return res.value
   }
@@ -275,7 +275,7 @@ export class FileModel {
   static async getDownloadStream (query) {
     const fileNode = await this.fileCollection.findOne(query)
     if (!fileNode) {
-      throw new Error('Not found')
+      throw new DoesNotExist('not found')
     }
     return this.getDownloadStreamById(fileNode._id)
   }
@@ -288,7 +288,7 @@ export class FileModel {
     _id = MongoDB.ObjectId(_id)
     const file = await this.fileCollection.findOne({ _id })
     if (!file) {
-      throw new Error('Not found')
+      throw new DoesNotExist('not found')
     }
     return file
   }
@@ -296,7 +296,7 @@ export class FileModel {
   static async get (query) {
     const file = await this.fileCollection.findOne(query)
     if (!file) {
-      throw new Error('Not found')
+      throw new DoesNotExist('not found')
     }
     return file
   }
@@ -306,7 +306,7 @@ export class FileModel {
     const options = { returnOriginal: false }
     const res = this.fileCollection.findOneAndUpdate(filter, { $set: update }, options)
     if (!res.value) {
-      throw new Error('Not found')
+      throw new DoesNotExist('not found')
     }
     return res.value
   }
@@ -319,7 +319,7 @@ export class FileModel {
   static async deleteOne (filter) {
     const fileNode = await this.fileCollection.findOne(filter)
     if (!fileNode) {
-      throw new Error('Not found')
+      throw new DoesNotExist('not found')
     }
     return this.deleteById(fileNode._id)
   }
@@ -327,5 +327,32 @@ export class FileModel {
   static async deleteMany (filter) {
     const files = await this.fileCollection.find(filter).toArray()
     return Promise.all(files.map(file => this.deleteById(file._id)))
+  }
+}
+
+export class DoesNotExist extends Error {
+  constructor (...params) {
+    super(...params)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, DoesNotExist)
+    }
+  }
+}
+
+export class CallingAbstractMethod extends Error {
+  constructor (...params) {
+    super(...params)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, CallingAbstractMethod)
+    }
+  }
+}
+
+export class NotImplemented extends Error {
+  constructor (...params) {
+    super(...params)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, NotImplemented)
+    }
   }
 }

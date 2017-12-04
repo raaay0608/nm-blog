@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('includes/head-tags') %>
+  <%- include('includes/commons') %>
+  <%- include('includes/custom-styles') %>
+  <title>error - raaay's </title>
+  <base href="/">
+</head>
+<body>
+
+  <%- include('components/side-nav') %>
+
+  <div class="container-fluid">
+    <div class="card error-card">
+      <h4 class="card-header">
+        error
+      </h4>
+      <div class="card-body">
+
+        <% if (status) { %>
+        <h2><%= status %></h2>
+        <% } %>
+
+        <% if (message) { %>
+          <%= message %>
+        <% } else { %>
+          <p>Looks like something broke!</p>
+        <% } %>
+
+      </div>
+    </div>
+
+</body>
