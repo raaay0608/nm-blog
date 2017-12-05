@@ -27,7 +27,7 @@ export class Post extends Component {
         heroImage: '',
         intro: '',
         slug: '',
-        state: '',
+        publish: false,
         tags: [],
         title: '',
         _id: ''
@@ -124,26 +124,24 @@ export class Post extends Component {
                 options={this.tagOptions}
               />
             </FormGroup>
-            <FormGroup>
-              <Label for="stateSelect">state</Label>
-              <Select
-                name={'state'}
-                clearable={false}
-                options={[
-                  { value: 'draft', label: 'Draft' },
-                  { value: 'published', label: 'Published' }
-                ]}
-                value={this.state.post.state}
-                onChange={(valueLabel) => this.mergeAndSetState('post', 'state', valueLabel.value)}
-              />
+            <FormGroup check>
+              <Label check for="publishCheck">
+                <Input type="checkbox" id="publishCheck"
+                  checked={this.state.post.publish}
+                  value={this.state.post.publish}
+                  onChange={(e) => this.mergeAndSetState('post', 'publish', e.target.checked)}
+                />
+                publish
+              </Label>
             </FormGroup>
+            <hr/>
+            <Button block outline color="primary" onClick={() => this.handleSave()}>Save</Button>
+            <Button block outline color="dark"
+              onClick={() => { this.props.history.push(`/posts/${this.state.post.slug}/images`) }}>
+              Images
+            </Button>
+            <Button block outline color="danger" onClick={() => this.handleDelete()}>Delete</Button>
           </Form>
-          <Button block outline color="primary" onClick={() => this.handleSave()}>Save</Button>
-          <Button block outline color="dark"
-            onClick={() => { this.props.history.push(`/posts/${this.state.post.slug}/images`) }}>
-            Images
-          </Button>
-          <Button block outline color="danger" onClick={() => this.handleDelete()}>Delete</Button>
         </div>
 
         <div className="post-editor">

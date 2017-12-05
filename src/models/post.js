@@ -14,7 +14,7 @@ const ObjectId = MongoDB.ObjectId
  * content    {string} - could be empty ''
  * category   {ObjectId} - reference to Category
  * tags       {list<ObjectId>} - references to Tag
- * state      {string} - required, in ['published', 'draft'], default='draft'
+ * publish    {bool} - required, default=false
  * date       {Date} - required, default=now
  */
 export class Post extends Model {
@@ -30,7 +30,7 @@ export class Post extends Model {
     return {
       title: 'Post',
       bsonType: 'object',
-      required: ['_id', 'slug', 'title', 'heroImage', 'intro', 'content', 'category', 'tags', 'state', 'date'],
+      required: ['_id', 'slug', 'title', 'heroImage', 'intro', 'content', 'category', 'tags', 'publish', 'date'],
       properties: {
         _id: {
           bsonType: 'objectId'
@@ -60,9 +60,8 @@ export class Post extends Model {
           bsonType: 'array',
           items: { bsonType: 'objectId' }
         },
-        state: {
-          bsonType: 'string', // or bool?
-          enum: ['draft', 'published']
+        publish: {
+          bsonType: 'bool'
         },
         date: {
           bsonType: 'date'
@@ -78,7 +77,7 @@ export class Post extends Model {
       { key: { title: 1 }, name: 'title', unique: true },
       { key: { category: 1 }, name: 'category' },
       { key: { tags: 1 }, name: 'tags' },
-      { key: { state: 1 }, name: 'state' },
+      { key: { publish: 1 }, name: 'publish' },
       { key: { date: 1 }, name: 'date' }
     ]
   }
@@ -86,7 +85,7 @@ export class Post extends Model {
   static async create (doc) {
     // default values and basic validations
     if (doc.date) {
-      doc.state = new Date(doc.state) // iso-string to Date object
+      doc.date = new Date(doc.date) // iso-string to Date object
     }
     let defaultProps = {
       heroImage: '',
@@ -94,7 +93,7 @@ export class Post extends Model {
       content: '',
       category: null,
       tags: [],
-      state: 'draft',
+      publish: false,
       date: new Date()
     }
     doc = Object.assign(defaultProps, doc)
