@@ -7,11 +7,12 @@ export const router = new KoaRouter()
 
 router.get('/token', async (ctx, next) => {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       ctx.body = {
         admin: ctx.state.admin
       }
       break
+    }
 
     default:
       ctx.throw(406)
@@ -20,7 +21,7 @@ router.get('/token', async (ctx, next) => {
 
 router.post('/token', async (ctx, next) => {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const [username, password] = [ctx.request.body.username, ctx.request.body.password]
       if (username !== config.get('admin.username') || password !== config.get('admin.password')) {
         ctx.status = 400
@@ -36,6 +37,7 @@ router.post('/token', async (ctx, next) => {
         success: true
       }
       break
+    }
 
     default:
       ctx.throw(406)

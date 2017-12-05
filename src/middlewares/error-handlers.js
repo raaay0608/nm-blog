@@ -4,10 +4,12 @@ import { DoesNotExist } from '~/models'
 export default function handleErrors (app) {
   app.use(NotFoundHandler)
   app.use(_404Handler)
+  app.use(_406Handler)
 }
 
 /**
  * catch `DoesNotExist` from db
+ * throw 404
  */
 export const NotFoundHandler = async (ctx, next) => {
   try {
@@ -16,20 +18,7 @@ export const NotFoundHandler = async (ctx, next) => {
     if (!(err instanceof DoesNotExist)) {
       throw err
     }
-    logger.info(`404 - ${ctx.method} ${ctx.url}`)
-    ctx.status = 404
-    switch (ctx.accepts(['html', 'json', 'image/*'])) {
-      case 'html': {
-        await ctx.render('error', {
-          status: 404,
-          message: err.message
-        })
-        break
-      }
-      case 'json': {
-        ctx.body = {message: err.message}
-      }
-    }
+    ctx.throw(404, err.message)
   }
 }
 
@@ -55,8 +44,41 @@ export const _404Handler = async (ctx, next) => {
       }
       case 'json': {
         ctx.body = {
-          status: err.status,
+          error: err.name,
           message: err.message || 'Not found'
+        }
+        break
+      }
+      default: {
+        ctx.res.end()
+        break
+      }
+    }
+  }
+}
+
+/**
+ * catch 406 http-error
+ */
+export const _406Handler = async (ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    if (Number(err.status) !== 406) {
+      throw err
+    }
+    ctx.status = 406
+    switch (ctx.accepts(['html', 'json'])) {
+      case 'html': {
+        await ctx.render('error', {
+          status: err.status,
+          message: err.message || 'currently cannot provide web page on this url...'
+        })
+        break
+      }
+      case 'json': {
+        ctx.body = {
+          error: err.name, message: err.message || 'Not acceptable'
         }
         break
       }

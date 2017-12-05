@@ -10,7 +10,7 @@ export const router = new KoaRouter()
 // get image list
 router.get('/posts/:postSlug/images', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const post = await Post.get({ slug: ctx.params.postSlug }) // check if posts exists
       const imageDocs = await PostImage.list({ 'metadata.post': post._id })
       imageDocs.map(imageDoc => {
@@ -18,15 +18,18 @@ router.get('/posts/:postSlug/images', async function (ctx, next) {
       })
       ctx.body = { images: imageDocs }
       break
-    default:
+    }
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
 // multipart-formdata
 router.post('/posts/:postSlug/images', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const post = await Post.get({slug: ctx.params.postSlug})
       let { file, filename, metadata } = ctx.request.body
       metadata = JSON.parse(metadata)
@@ -45,8 +48,11 @@ router.post('/posts/:postSlug/images', async function (ctx, next) {
       res.url = `/posts/${post.slug}/images/${res.metadata.filename}`
       ctx.body = { image: res }
       break
-    default:
+    }
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
@@ -77,8 +83,10 @@ router.get('/posts/:postSlug/images/:filename', async function (ctx, next) {
       ctx.body = downloadStream
       break
     }
-    default:
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
@@ -86,7 +94,7 @@ router.get('/posts/:postSlug/images/:filename', async function (ctx, next) {
 // Not tested
 router.patch('/posts/:postSlug/images/:filename', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const data = ctx.request.body
       const post = await Post.get({ slug: ctx.params.postSlug })
       const result = await PostImage.modifyFileInfo(
@@ -95,15 +103,18 @@ router.patch('/posts/:postSlug/images/:filename', async function (ctx, next) {
       )
       ctx.body = { result }
       break
-    default:
+    }
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
 // delete an image
 router.delete('/posts/:postSlug/images/:filename', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const post = await Post.get({ slug: ctx.params.postSlug })
       const result = await PostImage.deleteOne({
         'metadata.post': post._id,
@@ -111,8 +122,11 @@ router.delete('/posts/:postSlug/images/:filename', async function (ctx, next) {
       })
       ctx.body = { result }
       break
-    default:
+    }
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 

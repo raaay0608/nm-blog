@@ -25,11 +25,10 @@ router.get('/posts', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
     case 'json': {
       const posts = await Post.list()
-      ctx.body = {
-        posts: posts
-      }
+      ctx.body = { posts }
       break
     }
+
     case 'html': {
       const page = Number(ctx.query.page) || 1
       const [skip, limit] = [(page - 1) * config.get('postsPerPage'), config.get('postsPerPage')]
@@ -38,23 +37,27 @@ router.get('/posts', async function (ctx, next) {
       await ctx.render('post-list', { posts, page, total })
       break
     }
+
     default: {
       ctx.throw(406)
+      break
     }
   }
 })
 
 router.post('/posts', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const data = ctx.request.body
       const post = await Post.create(data)
-      ctx.body = {
-        post: post
-      }
+      ctx.body = { post }
       break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
@@ -63,11 +66,10 @@ router.get('/posts/:postSlug', async function (ctx, next) {
     case 'json': {
       const postSlug = ctx.params.postSlug
       const post = await Post.get({ slug: postSlug })
-      ctx.body = {
-        post: post
-      }
+      ctx.body = { post }
       break
     }
+
     case 'html': {
       const postSlug = ctx.params.postSlug
       const post = await Post.get({ slug: postSlug })
@@ -75,35 +77,44 @@ router.get('/posts/:postSlug', async function (ctx, next) {
       await ctx.render('post', { post })
       break
     }
-    default:
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
 router.patch('/posts/:postSlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const postSlug = ctx.params.postSlug
       const data = ctx.request.body
       const post = await Post.modify({ slug: postSlug }, data)
-      ctx.body = {
-        post: post
-      }
+      ctx.body = { post }
       break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
 router.delete('/posts/:postSlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const postSlug = ctx.params.postSlug
       const delResult = await Post.delete({ slug: postSlug })
       ctx.body = delResult
       break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 

@@ -6,73 +6,79 @@ export const router = new KoaRouter()
 
 router.get('/categories', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
-    case 'json':
+    case 'json': {
       let categories = await Category.list()
-      ctx.body = {
-        categories: categories
-      }
+      ctx.body = { categories }
       break
-    case 'html':
-      break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+    }
   }
 })
 
 router.post('/categories', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const data = ctx.request.body
       const category = await Category.create(data)
-      ctx.body = {
-        category: category
-      }
+      ctx.body = { category }
       break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+    }
   }
 })
 
 router.get('/categories/:categorySlug', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
-    case 'json':
+    case 'json': {
       const categorySlug = ctx.params.categorySlug
       const category = await Category.get({ slug: categorySlug })
-      ctx.body = {
-        category: category
-      }
+      ctx.body = { category }
       break
-    case 'html':
-      break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
 router.patch('/categories/:categorySlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const categorySlug = ctx.params.categorySlug
       const data = ctx.request.body
       const category = await Category.modify({ slug: categorySlug }, data)
-      ctx.body = {
-        category: category
-      }
+      ctx.body = { category }
       break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
 router.delete('/categories/:categorySlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const categorySlug = ctx.params.categorySlug
       const res = await Category.delete({ slug: categorySlug })
       ctx.body = res
       break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 

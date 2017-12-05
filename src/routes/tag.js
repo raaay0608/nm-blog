@@ -6,16 +6,18 @@ export const router = new KoaRouter()
 
 router.get('/tags', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
-    case 'json':
+    case 'json': {
       const tags = await Tag.list()
       ctx.body = {
         tags: tags
       }
       break
-    case 'html':
-      break
-    default:
+    }
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
@@ -28,30 +30,34 @@ router.post('/tags', async function (ctx, next) {
         tag: tag
       }
       break
-    default:
+
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
 router.get('/tags/:tagSlug', async function (ctx, next) {
   switch (ctx.accepts('json', 'html')) {
-    case 'json':
+    case 'json': {
       const tagSlug = ctx.params.tagSlug
       const tag = await Tag.get({ slug: tagSlug })
       ctx.body = {
         tag: tag
       }
       break
-    case 'html':
-      break
-    default:
+    }
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
 router.patch('/tags/:tagSlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const tagSlug = ctx.params.tagSlug
       const data = ctx.request.body
       const tag = await Tag.modify({ slug: tagSlug }, data)
@@ -59,6 +65,7 @@ router.patch('/tags/:tagSlug', async function (ctx, next) {
         tag: tag
       }
       break
+    }
     default:
       ctx.throw(406)
   }
@@ -66,13 +73,16 @@ router.patch('/tags/:tagSlug', async function (ctx, next) {
 
 router.delete('/tags/:tagSlug', async function (ctx, next) {
   switch (ctx.accepts('json')) {
-    case 'json':
+    case 'json': {
       const tagSlug = ctx.params.tagSlug
       const res = await Tag.delete({ slug: tagSlug })
       ctx.body = res
       break
-    default:
+    }
+    default: {
       ctx.throw(406)
+      break
+    }
   }
 })
 
