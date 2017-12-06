@@ -1,3 +1,8 @@
 .post .post-title h1 {
   font-size: 2.2rem;
 }
+
+.post .post-content {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

@@ -66,16 +66,23 @@ app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 })
 
+console.log(config.get('mongo'))
+
 db.connect(config.get('mongo'))
   // TODO: could this be more elegant ..?
   // may place somewhere else
+  .catch(err => {
+    console.log('DB connect error.')
+    console.log(`${err.name}: ${err.message}`)
+    process.exit(-1)
+  })
   .then(conn => {
-    return Promise.resolve(Promise.all([
+    return Promise.all([
       Category.ensureValidator(),
       Post.ensureValidator(),
       Tag.ensureValidator(),
       PostImage.ensureValidator()
-    ]))
+    ])
   })
   .then(() => {
     return Promise.all([
@@ -85,11 +92,16 @@ db.connect(config.get('mongo'))
       PostImage.ensureIndexes()
     ])
   })
+  .catch(err => {
+    console.log('Error')
+    console.log(`${err.name}: ${err.message}`)
+    process.exit(-1)
+  })
   .then(() => {
     console.log(`Server Starts`)
-    app.listen('8000')
+    app.listen(config.get('port'))
   })
   .catch(err => {
-    console.log('Db connection error')
-    console.log(err)
+    console.log(`${err.name}: ${err.message}`)
+    process.exit(-1)
   })

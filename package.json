@@ -6,6 +6,10 @@
   "scripts": {
     "_dev": "cross-env NODE_ENV=dev babel-node ./src/app.js --use_strict",
     "dev": "nodemon --exec cross-env NODE_ENV=dev babel-node ./src/app.js --use_strict",
+    "build": "cross-env NODE_ENV=prod rimraf dist/ && babel ./ --out-dir dist/ --ignore ./admin,./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "start": "node dist/src/app.js",
+    "a": "npm run build && npm start",
+    "lint": "eslint src test",
     "test": "echo \"Error: no test specified\" && exit 1",
     "node": "node",
     "babel-node": "babel-node"

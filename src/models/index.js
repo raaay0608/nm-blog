@@ -18,6 +18,9 @@ export function connect (uri, options = {}) {
         _db = db
         resolve(_db)
       })
+      .catch(err => {
+        reject(err)
+      })
   })
 }
 
@@ -55,19 +58,19 @@ export class Model {
   // ======== to be overwrited ========
 
   static get modelName () {
-    throw new Error('Getter [modelName] does not implemented')
+    throw new CallingAbstractMethod('Getter [modelName] does not implemented')
   }
 
   static get collName () {
-    throw new Error('Getter [collName] does not implemented')
+    throw new CallingAbstractMethod('Getter [collName] does not implemented')
   }
 
   static get schema () {
-    throw new Error('Getter [schema] does not implemented')
+    throw new CallingAbstractMethod('Getter [schema] does not implemented')
   }
 
   static get indexes () {
-    throw new Error('Getter [indexes] does not implemented')
+    throw new CallingAbstractMethod('Getter [indexes] does not implemented')
   }
 
   // ======== utils ========
@@ -330,9 +333,18 @@ export class FileModel {
   }
 }
 
-export class DoesNotExist extends Error {
-  constructor (...params) {
-    super(...params)
+class DBError extends Error {
+  constructor (message, status) {
+    super(message)
+    this.name = this.constructor.name
+    Error.captureStackTrace(this, this.constructor)
+    this.status = status || 500
+  }
+};
+
+export class DoesNotExist extends DBError {
+  constructor (message) {
+    super(message, 404)
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, DoesNotExist)
     }
@@ -340,8 +352,8 @@ export class DoesNotExist extends Error {
 }
 
 export class CallingAbstractMethod extends Error {
-  constructor (...params) {
-    super(...params)
+  constructor (message) {
+    super(message)
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, CallingAbstractMethod)
     }
@@ -349,8 +361,8 @@ export class CallingAbstractMethod extends Error {
 }
 
 export class NotImplemented extends Error {
-  constructor (...params) {
-    super(...params)
+  constructor (message) {
+    super(message)
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, NotImplemented)
     }

@@ -2,9 +2,10 @@ import logger from './logger'
 import { DoesNotExist } from '~/models'
 
 export default function handleErrors (app) {
-  app.use(NotFoundHandler)
+  app.use(unhandledHandler)
   app.use(_404Handler)
   app.use(_406Handler)
+  app.use(NotFoundHandler)
 }
 
 /**

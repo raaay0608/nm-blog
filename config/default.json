@@ -1,5 +1,6 @@
 {
     "mongo": "mongodb://localhost:27017/raaay-blog",
+    "port": 8000,
     "secret": "seecreet",
 
     "admin": {
