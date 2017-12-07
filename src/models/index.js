@@ -1,5 +1,3 @@
-// TODO: Error Type
-
 import MongoDB, { MongoClient } from 'mongodb'
 // import Category from './category'
 // import PostImage from './post-image'
@@ -14,8 +12,8 @@ export function connect (uri, options = {}) {
       return resolve(_db)
     }
     return MongoClient.connect(uri, options)
-      .then(db => {
-        _db = db
+      .then(client => {
+        _db = client.db('raaa-blog')
         resolve(_db)
       })
       .catch(err => {
