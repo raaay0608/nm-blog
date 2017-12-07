@@ -17,19 +17,19 @@ export class Headbar extends Component {
     return (
       <div className="Headbar">
         <Navbar fixed="top" expand="md" color="dark" dark>
-          <NavbarBrand href="#">raaay's</NavbarBrand>
-          <NavbarToggler onClick={this.toggle} />
+          <Link to={`/`} className="navbar-brand">raaay's</Link>
+          <NavbarToggler onClick={() => this.toggle()} />
 
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <NavLink href="/#/posts/">Posts</NavLink>
+                <Link to={`/posts`} className="nav-link">Posts</Link>
               </NavItem>
               <NavItem>
-                <NavLink href="/#/categories/">Categories</NavLink>
+                <Link to={`/categories`} className="nav-link">Categories</Link>
               </NavItem>
               <NavItem>
-                <NavLink href="/#/tags/">Tags</NavLink>
+                <Link to={`/tags`} className="nav-link">Tags</Link>
               </NavItem>
             </Nav>
           </Collapse>

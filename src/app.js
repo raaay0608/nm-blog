@@ -5,6 +5,7 @@ import KoaBody from 'koa-body'
 import KoaError from 'koa-error'
 import KoaViews from 'koa-views'
 import KoaMount from 'koa-mount'
+import KoaStatic from 'koa-static'
 import KoaJson from 'koa-json'
 import KoaLogger from 'koa-logger'
 import KoaJWT from 'koa-jwt'
@@ -49,6 +50,8 @@ handleError(app)
 
 // static files
 app.use(KoaMount('/statics', staticServer))
+
+app.use(KoaMount('/admin', KoaStatic('./admin/build')))
 
 // views
 app.use(KoaViews(path.join(__dirname, 'views'), {extension: 'ejs'}))

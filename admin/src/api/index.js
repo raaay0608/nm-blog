@@ -1,4 +1,6 @@
-const urlBase = 'http://localhost:8000' // TODO
+import config from '../config'
+
+const urlBase = config.apiUrl
 
 // const baseHeaders = new Headers({
 //   'Content-Type': 'application/json',

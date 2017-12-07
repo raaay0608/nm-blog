@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { Button, Container, Form, FormGroup, Label, Col, Row, Input,
   Card, CardHeader, CardBody } from 'reactstrap'
 
+import config from '../config'
+
 import * as PostApi from '../api/post'
 import * as PostImageApi from '../api/post-image'
 
@@ -138,11 +140,10 @@ export class PostImage extends Component {
                       </Form>
                     </Col>
                     <Col>
-                      <img src={'http://localhost:8000' + image.url}
+                      <img src={config.apiUrl + image.url}
                         className="img-fluid img-thumbnail"
                         alt={image.metadata.filename}>
                       </img>
-                      {/* TODO */}
                     </Col>
                   </Row>
                 </CardBody>

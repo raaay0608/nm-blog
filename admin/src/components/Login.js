@@ -50,9 +50,7 @@ export class Login extends Component {
   }
 
   handleLogin () {
-    console.log('handleLogin')
     if (!this.state.username || !this.state.password) {
-      console.log('validate failed')
       return
     }
     const body = {

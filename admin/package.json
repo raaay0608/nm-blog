@@ -2,6 +2,7 @@
   "name": "admin",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/admin",
   "dependencies": {
     "bootstrap": "^4.0.0-beta.2",
     "github-markdown-css": "^2.9.0",
