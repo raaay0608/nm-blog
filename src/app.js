@@ -69,7 +69,7 @@ app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 })
 
-db.connect(config.get('mongo'))
+db.connect()
   // TODO: could this be more elegant ..?
   // may place somewhere else
   .catch(err => {

@@ -22,6 +22,18 @@
       <% } %>
     </div>
 
+    <%# notice when there is no posts %>
+    <% if (!posts || !posts.length) { %>
+    <div class="card">
+      <div class="card-header">
+        Ooops...
+      </div>
+      <div class="card-body">
+        <em>nothing here...</em>
+      </div>
+    </div>
+    <% } %>
+
     <%# pagination %>
     <%- include('components/pagination', { page, total }) %>    
 

@@ -1,2 +1,10 @@
 {
+    "mongo": {
+        "address": "localhost",
+        "port": 27017,
+        "user": null,
+        "password": null,
+        "authSource": null,
+        "database": "raaay-blog"
+    }
 }

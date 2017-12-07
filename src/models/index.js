@@ -1,43 +1,46 @@
-import MongoDB, { MongoClient } from 'mongodb'
+import MongoDB, { MongoClient, Server } from 'mongodb'
+import config from 'config'
 // import Category from './category'
 // import PostImage from './post-image'
 // import Post from './post'
 // import Tag from './tag'
 
-let _db = null
+let _client = null
 
-export function connect (uri, options = {}) {
-  return new Promise((resolve, reject) => {
-    if (_db) {
-      return resolve(_db)
-    }
-    return MongoClient.connect(uri, options)
-      .then(client => {
-        _db = client.db('raaa-blog')
-        resolve(_db)
-      })
-      .catch(err => {
-        reject(err)
-      })
-  })
+export async function connect ({
+  mongoAddress = config.get('mongo.address') || 'localhost',
+  mongoPort = config.get('mongo.port') || 27017,
+  mongoUser = config.get('mongo.user'),
+  mongoPassword = config.get('mongo.password'),
+  authSource = config.get('mongo.authSource') || config.get('mongo.database')
+} = {}) {
+  if (_client) {
+    return _client.db(config.get('mongo.database'))
+  }
+  const client = await new MongoClient(new Server(mongoAddress, mongoPort), {
+    user: mongoUser,
+    password: mongoPassword,
+    authSource: authSource
+  }).connect()
+  _client = client
 }
 
 export function close () {
-  if (!_db) {
+  if (!_client) {
     return
   }
-  return _db.close()
+  return _client.close()
     .then(ret => {
-      _db = null
+      _client = null
     })
 }
 
 export function connection () {
-  return _db
+  return _client.db(config.get('mongo.database'))
 }
 
 export function collection (collName) {
-  return _db.collection(collName)
+  return _client.db(config.get('mongo.database')).collection(collName)
 }
 
 /**
@@ -46,7 +49,7 @@ export function collection (collName) {
  */
 export class Model {
   static get db () {
-    return _db
+    return _client.db(config.get('mongo.database'))
   }
 
   static get collection () {
@@ -79,11 +82,12 @@ export class Model {
         validator: { $jsonSchema: this.schema }
       })
     } else {
-      return this.db.command({
-        collMod: this.collName,
-        validator: { $jsonSchema: this.schema },
-        validationLevel: 'strict'
-      })
+      // return this.db.command({
+      //   collMod: this.collName,
+      //   validator: { $jsonSchema: this.schema },
+      //   validationLevel: 'strict'
+      // })
+      return true
     }
   }
 
@@ -202,7 +206,7 @@ export class Model {
  */
 export class FileModel {
   static get db () {
-    return _db
+    return _client.db(config.get('mongo.database'))
   }
 
   static get bucketName () {
@@ -245,11 +249,12 @@ export class FileModel {
         validator: { $jsonSchema: this.filesSchema }
       })
     } else {
-      return this.db.command({
-        collMod: this.fileCollectionName,
-        validator: { $jsonSchema: this.filesSchema },
-        validationLevel: 'strict'
-      })
+      // return this.db.command({
+      //   collMod: this.fileCollectionName,
+      //   validator: { $jsonSchema: this.filesSchema },
+      //   validationLevel: 'strict'
+      // })
+      return true
     }
   }
 
