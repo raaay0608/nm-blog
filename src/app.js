@@ -34,6 +34,8 @@ import Tag from '~/models/tag'
 export const app = new Koa()
 export default app
 
+console.log(process.env.NODE_ENV)
+
 app.use(KoaBody()) // TODO: no need for multipart parse anymore, may replace with a lighter parser
 app.use(Multy())
 app.use(KoaLogger())
@@ -100,7 +102,7 @@ db.connect()
   })
   .then(() => {
     console.log(`Server Starts`)
-    app.listen(config.get('port'))
+    app.listen(config.get('port', '0.0.0.0'))
   })
   .catch(err => {
     console.log(`${err.name}: ${err.message}`)

@@ -1,6 +1,7 @@
 body {
   background-color: rgba(65, 72, 80, 0.93);
-  background-image: url('/statics/img/sunset.jpg');
+  /*background-image: url('/statics/img/sunset.jpg');*/
+  background-image: url('http://ok13adqb9.bkt.clouddn.com/sunset.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
