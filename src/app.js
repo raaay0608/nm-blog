@@ -43,11 +43,13 @@ app.use(KoaJson())
 app.use(cors())
 app.use(KoaJWT({ secret: config.get('secret'), passthrough: true }))
 
+/*
 app.use(auth)
 app.use(KoaError({
   engine: 'ejs',
   template: path.join(__dirname, '/views/debug.ejs')
 }))
+*/
 handleError(app)
 
 // static files
@@ -102,7 +104,7 @@ db.connect()
   })
   .then(() => {
     console.log(`Server Starts`)
-    app.listen(config.get('port', '0.0.0.0'))
+    app.listen(config.get('port'), 'localhost')
   })
   .catch(err => {
     console.log(`${err.name}: ${err.message}`)

@@ -42,10 +42,14 @@ export class Post extends Component {
     this.fetchTags()
     this.fetchPost(this.props.match.params.postSlug)
     const postSlug = this.props.match.params.postSlug
+    this.absoluteReg = new RegExp('^(?:[a-z]+:)?//', 'i')
     this.md = new MarkdownIt({
       // TODO: May not working as expected in some cases.
-      replaceLink: function (link, env) {
-        if (!link.contains('://')) {
+      replaceLink: (link, env) => {
+        if (this.absoluteReg.test(link)) {
+          return link
+        }
+        if (link.startsWith('/')) {
           return link
         }
         // return `${config.apiUrl}/posts/${postSlug}/${link}`
