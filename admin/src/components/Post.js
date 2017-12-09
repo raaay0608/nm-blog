@@ -9,6 +9,8 @@ import 'react-select/dist/react-select.css'
 import Datetime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
 
+import config from '../config'
+
 import * as PostApi from '../api/post'
 import * as CategoryApi from '../api/category'
 import * as TagApi from '../api/tag'
@@ -41,9 +43,10 @@ export class Post extends Component {
     this.fetchPost(this.props.match.params.postSlug)
     const postSlug = this.props.match.params.postSlug
     this.md = new MarkdownIt({
-      replaceLink: function (link, env) {
-        return `http://localhost:8000/posts/${postSlug}/${link}`
-      }})
+      // replaceLink: function (link, env) {
+      //   return `${config.apiUrl}/posts/${postSlug}/${link}`
+      // }
+    })
     this.md.use(MarkdownItReplaceLink)
   }
 
