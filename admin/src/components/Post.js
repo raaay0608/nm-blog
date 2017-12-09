@@ -43,9 +43,14 @@ export class Post extends Component {
     this.fetchPost(this.props.match.params.postSlug)
     const postSlug = this.props.match.params.postSlug
     this.md = new MarkdownIt({
-      // replaceLink: function (link, env) {
-      //   return `${config.apiUrl}/posts/${postSlug}/${link}`
-      // }
+      // TODO: May not working as expected in some cases.
+      replaceLink: function (link, env) {
+        if (!link.contains('://')) {
+          return link
+        }
+        // return `${config.apiUrl}/posts/${postSlug}/${link}`
+        return `/posts/${this.state.post.slug}/${link}`
+      }
     })
     this.md.use(MarkdownItReplaceLink)
   }
