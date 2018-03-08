@@ -1,0 +1,37 @@
+<header id="navbar" class="ui fixed inverted menu">
+    <a href="/admin" class="header item">
+      admin
+    </a>
+
+    <% if (locals.admin) { %>
+
+    <div class="ui simple dropdown item">
+      Dashboard
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <a class="item" href="/admin">Index</a>
+      </div>
+    </div>
+
+    <div class="ui simple dropdown item">
+      Contents
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <a class="item" href="/admin/posts">Posts</a>
+        <div class="divider"></div>
+        <a class="item" href="/admin/categories">Categories</a>
+        <a class="item" href="/admin/tags">Tags</a>
+        <div class="divider"></div>
+        <a class="item" href="/admin/files">Files</a>        
+      </div>      
+    </div>
+
+    <div class="right menu">
+      <a class="ui item" href="/admin/logout/">
+        Logout
+      </a>
+    </div>
+
+    <% } %>
+</header>
+<div class="padding"></div>

@@ -1,0 +1,28 @@
+body {
+  /* background-image: url('/img/background.jpg'); */
+  /* background-repeat: no-repeat; */
+  /* background-size: cover; */
+  /* background-attachment: fixed; */
+  /* background-color:  #f0f0f0; */
+  /* background-color: ivory ; */
+}
+
+.ui.card {
+  /* margin: 3em !important; */
+  margin-top: 2em !important;
+  margin-bottom: 2em !important;
+  width: 100%;
+  /* padding: 1em; */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.pagination.menu {
+  margin: auto !important;
+}
+
+.right-margin {
+  margin-right: 1em;
+}

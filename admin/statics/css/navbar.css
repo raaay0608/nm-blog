@@ -1,0 +1,4 @@
+#navbar {
+  /* may should be the highest, > 1000 */
+  z-index: 2000;
+}

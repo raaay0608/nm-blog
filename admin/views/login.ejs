@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<%- include("components/head-content") %>
+
+<%- include("components/navbar") %>
+
+<div class="ui container">
+
+  <div class="ui middle aligned center grid">
+
+    <div class="column">
+      <h2 class="ui image header">
+        <%# <img src="logo.png" class="image"> %>
+        <div class="content">
+          Admin log-in
+        </div>
+      </h2>
+
+      <form class="ui form" method="POST" action="/admin/login">
+        <div class="ui">
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input name="username" placeholder="Username" type="text">
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input name="password" placeholder="Password" type="password">
+            </div>
+          </div>
+          <button class="ui fluid large primary button" type="submit">Login</button>
+          
+        </div>
+
+        <div class="ui error message"></div>
+      </form>
+
+    </div>
+  </div>
+
+</div>

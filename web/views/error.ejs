@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<%- include("components/common-head") %>
+
+<div class="ui container">
+
+  <%# top menu %>
+  <%- include("components/head-menu") %>
+
+  <div class="ui card">
+    <div class="content">
+      <div class="header">
+        Error <%= status %>
+      </div>
+      <div class="description">
+        <%= error.name %>: <%= error.message %>
+      </div>
+    </div>
+  </div>
+  
+</div>

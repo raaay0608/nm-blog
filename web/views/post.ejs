@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<%- include("components/common-head") %>
+<base href="/posts/<%= post.slug %>">
+
+<div class="ui container">
+
+  <%# top menu %>
+  <%- include("components/head-menu") %>
+
+  <%# post detail card %>
+  <%- include("components/post-content") %>
+  
+</div>

@@ -1,0 +1,42 @@
+
+<% if (locals.pagination) { %>
+<div class="ui center aligned container">
+  <div class="ui centered pagination menu">
+    <a class="<% if (page <= 1) { %>disabled<% } %> item"
+      <% if (page !== 1) { %>
+      href="<%= pagination.firstPageUrl %>"
+      <% } %>
+    >
+      <i class="angle double left icon"></i>
+    </a>
+
+    <a class="<% if (page <= 1) { %>disabled<% } %> item"
+      <% if (page !== 1) { %>
+        href="<%= pagination.prevPageUrl %>"
+      <% } %>
+    >
+      <i class="angle left icon"></i>
+    </a>
+
+    <a class="active item">
+      <%= page %>
+    </a>
+
+    <a class="<% if (page === pageCount) { %>disabled<% } %> item"
+      <% if (page !== pageCount) { %>
+        href="<%= pagination.nextPageUrl %>"
+      <% } %>
+    >
+      <i class="angle right icon"></i>
+    </a>
+
+    <a class="<% if (page === pageCount) { %>disabled<% } %> item" 
+      <% if (page !== pageCount) { %>
+        href="<%= pagination.lastPageUrl %>"
+      <% } %>
+    >
+      <i class="angle double right icon"></i>
+    </a>
+  </div>
+</div>
+<% } %>

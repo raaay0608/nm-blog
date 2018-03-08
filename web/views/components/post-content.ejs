@@ -1,0 +1,49 @@
+<div class="ui card">
+  <div class="content">
+    <a href="/posts/<%= post.slug %>" class="header">
+      <%= post.title %>
+    </a>
+  </div>
+
+  <div class="content">
+    <div class="ui ribbon label">摘要</div><br><br>
+    <article class="markdown-body">
+      <%- marked(post.excerpt || '') %>
+    </article>
+  </div>
+  <div class="content">
+    <div class="ui ribbon label">正文</div><br><br>
+    <article class="markdown-body">
+      <%- marked(post.content || '') %>
+    </article>
+  </div>
+  <div class="extra content">
+    <span class="right-margin"><i class="calendar icon"></i>
+      <% if (post.createdAt) { %>
+        <a href="/posts/<%= post.slug %>"><%= post.createdAt.toLocaleDateString() %></a>
+      <% } else { %>
+        <span>---</span>
+      <% } %>
+    </span>
+    <span class="right-margin">
+      <i class="folder open icon"></i>
+      <% if (post.categories.length) { %>
+        <% for (const [idx, category] of post.categories.entries()) { %>
+          <a href="/categories/<%= category.slug %>"><%= category.name %></a>
+        <% } %>
+      <% } else { %>
+        <span>----</span>
+      <% } %>
+    </span>
+    <span class="right-margin">
+      <i class="tags icon"></i>
+      <% if (post.tags.length) { %>
+        <% for (const [idx, tag] of post.tags.entries()) { %>
+          <a href="/tags/<%= tag.slug %>"><%= tag.name %></a>
+        <% } %>
+      <% } else { %>
+        <span>----</span>
+      <% } %>
+    </span>
+  </div>
+</div>

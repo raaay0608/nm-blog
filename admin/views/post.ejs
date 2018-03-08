@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<%- include("components/head-content") %>
+
+<%- include("components/navbar") %>
+
+<div id="post-app"></div>
+
+<script type="text/x-template" id="post-app-template">
+  <div id="post-app" class="ui container">
+
+    <div v-bind:class="{ active: loading }" class="ui inverted dimmer">
+      <div class="ui text loader">Loading</div>
+    </div>
+
+    <h1>Post "{{ postId }}"</h1>
+
+    <div class="ui divider"></div>
+
+    <div class="ui grid">
+      <!-- left -->
+      <div class="twelve wide column container">
+        <div class="ui form">
+          <div class="required field">
+            <label>Title</label>
+            <input v-model="post.title" type="text" name="title" placeholder="Title">
+          </div>
+          <div class="required field">
+            <label>Slug</label>
+            <input v-model="post.slug" type="text" name="slug" placeholder="Slug">
+          </div>
+          <div class="ui divider"></div>
+          <div class="field">
+            <label>Excerpt</label>
+            <textarea v-model="post.excerpt" rows="10" placeholder="Excerpt"></textarea>
+          </div>
+          <div class="field">
+            <label>Content</label>
+            <textarea v-model="post.content" rows="20" placeholder="Content"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- right -->
+      <div class="four wide column container">
+        <div class="ui form">
+          <div class="field">
+            <label>Created At</label>
+            <p>{{ post.createdAt }}</p>
+          </div>
+          <div class="field">
+            <label>Updated At</label>
+            <p>{{ post.updatedAt }}</p>
+          </div>
+          <div class="ui divider"></div>
+          <div class="field">
+            <label>Categories</label>
+            <select v-model="postCategories" id="categories-select" multiple="" class="ui dropdown">
+              <option value="">Categories</option>
+              <option v-for="category in categories" :key="category._id" :value="category._id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tags</label>
+            <select v-model="postTags" id="tags-select" multiple="" class="ui dropdown">
+              <option value="">Tags</option>
+              <option v-for="tag in tags" :key="tag._id" :value="tag._id">
+                {{ tag.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="ui divider"></div>
+        <button @click="toggleDeleteModal()" class="ui negative button">Delete</button>
+        <button @click="toggleUpdateModal()" class="ui primary button">Save</button>
+      </div>
+    </div>
+
+    <div id="post-confirm-update-modal" class="ui basic modal">
+      <div class="ui icon header">
+        <i class="save icon"></i>
+        Update Post
+      </div>
+      <div class="content">
+        <p>
+          Are you sure to update the post?
+        </p>
+      </div>
+      <div class="actions">
+        <button @click="handleUpdatePost()" class="ui positive basic inverted button">
+          <i class="check icon"></i>
+          Update
+        </button>
+        <button class="ui basic cancel inverted button">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <div id="post-confirm-delete-modal" class="ui basic modal">
+      <div class="ui icon header">
+        <i class="remove icon"></i>
+        Delete Post
+      </div>
+      <div class="content">
+        <p>
+          Are you sure to delete the post?
+        </p>
+      </div>
+      <div class="actions">
+        <button @click="handleDeletePost()" class="ui negative basic inverted button">
+          <i class="remove icon"></i>
+          Delete
+        </button>
+        <button class="ui basic cancel inverted button">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+  </div>
+</script>
+
+<script type="module">
+import * as Api from '/admin/js/api.js'
+
+const postId = '<%= postId %>';
+
+const vm = new Vue({
+  el: '#post-app',
+  template: '#post-app-template',
+
+  data() {
+    return {
+      loading: false,
+      categories: [],
+      tags: [],
+      post: {
+        categories: [],
+        tags: [],
+      },
+    }
+  },
+
+  computed: {
+    postId() {
+      return postId;
+    },
+
+    categoriesMap() {
+      return new Map(this.categories.map(c => [c._id, c]));
+    },
+
+    tagsMap() {
+      return new Map(this.tags.map(t => [t._id, t]));
+    },
+
+    postCategories: {
+      get() {
+        // return this.post.categories.map(c => c._id);
+        const postCategoriesIds = this.post.categories.map(c => c._id);
+        $('#categories-select').dropdown('set selected', postCategoriesIds); // required to update the dropdown select
+        return postCategoriesIds;
+      },
+      set(newValue) {
+        if (!newValue) {
+          this.post.categories = [];
+          return;
+        }
+        this.post.categories = newValue.map(v => this.categoriesMap.get(v));
+      },
+    },
+
+    postTags: {
+      get() {
+        // return this.post.tags.map(t => t._id);
+        const postTagsIds = this.post.tags.map(t => t._id);
+        $('#tags-select').dropdown('set selected', postTagsIds); // required to update the dropdown select
+        return postTagsIds;
+      },
+      set(newValue) {
+        if (!newValue) {
+          this.post.tags = [];
+          return;
+        }
+        this.post.tags = newValue.map(v => this.tagsMap.get(v));
+      },
+    }
+  },
+
+  async created() {
+    this.postId = postId;
+    this.loading = true;
+    await Promise.all([
+      this.fetchCategories(),
+      this.fetchTags(),
+    ]);
+    await this.fetchPost();
+    this.loading = false;
+  },
+
+  async mounted() {
+    this.initUIElements();
+  },
+
+  updated() {
+  },
+
+  methods: {
+    initUIElements() {
+      // $('select.dropdown').dropdown({ allowAdditions: true });
+      $('select.dropdown').dropdown();
+    },
+
+    async fetchPost() {
+      const res = await Api.getPost(this.postId);
+      this.post = res.jsonBody.post;
+      delete this.post._id;
+    },
+
+    async fetchCategories() {
+      const res = await Api.getCategories();
+      this.categories = res.jsonBody.categories;
+      this.initUIElements();
+    },
+
+    async fetchTags() {
+      const res = await Api.getTags();
+      this.tags = res.jsonBody.tags;
+      this.initUIElements();
+    },
+
+    async handleDeletePost() {
+      this.loading = true;
+      const res = await Api.deletePost(this.postId);
+      this.loading = false;
+      window.location.assign('/admin/posts');
+    },
+
+    async handleUpdatePost() {
+      this.loading = true;
+      const res = await Api.updatePost(this.postId, this.post);
+      await Promise.all([
+        this.fetchCategories(),
+        this.fetchTags(),
+      ]);
+      await this.fetchPost();
+      this.loading = false;
+    },
+
+    toggleUpdateModal() {
+      $('#post-confirm-update-modal').modal('toggle');
+    },
+
+    toggleDeleteModal() {
+      $('#post-confirm-delete-modal').modal('toggle');
+    },
+  }
+});
+</script>

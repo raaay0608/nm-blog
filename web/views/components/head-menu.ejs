@@ -1,0 +1,29 @@
+<div class="ui top menu">
+
+  <div class="header item">
+    <%= siteOptions.SITE_NAME %>
+  </div>
+
+  <a class="item" href="/posts">文章</a>
+
+  <div class="ui simple dropdown item">
+    分类
+    <i class="dropdown icon"></i>
+    <div class="menu">
+      <% for (const category of categories) { %>
+        <a href="/categories/<%= category.slug %>" class="item"><%= category.name %></a>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="ui simple dropdown item">
+    标签
+    <i class="dropdown icon"></i>
+    <div class="menu">
+      <% for (const tag of tags) { %>
+        <a href="/tags/<%= tag.slug %>"" class="item"><%= tag.name %></a>
+      <% } %>
+    </div>
+  </div>
+
+</div>

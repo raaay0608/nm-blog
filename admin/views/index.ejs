@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<%- include("components/head-content") %>
+
+<%- include("components/navbar") %>
+
+<div id="ui" class="ui container">
+  <%#- include("components/notification") %>
+  <h1>Index</h1>
+  <p>admin: <%= admin %></p>
+</div>
+
+<script type="module">
+import * as Api from '/admin/js/api.js';
+
+const vm = new Vue({
+    el: '#ui',
+    data() {
+      return {};
+    },
+});
+</script>

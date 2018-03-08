@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<%- include("components/head-content") %>
+
+<%- include("components/navbar") %>
+
+<div id="files-app"></div>
+
+<script type="text/x-template" id="files-app-template">
+  <div id="files-app" class="ui container">
+
+    <div v-bind:class="{ active: loading }" class="ui inverted dimmer">
+      <div class="ui text loader">Loading</div>
+    </div>
+
+    <h1>Files</h1>
+
+    <button v-on:click="toggleUploadFileModal()" class="ui button">New</button>
+
+    <table class="ui selectable table">
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th>Type</th>
+          <th>Size</th>
+          <th>Upload Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="file in files" @click="handleClickFileItem(file._id)" class="pointer">
+          <td>{{ file.filename }}</td>
+          <td>{{ file.metadata.contentType }}</td>
+          <td>{{ file.length | readableFileSize }}</td>
+          <td>{{ file.uploadDate }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+      </tfoot>
+    </table>
+
+    <div id="upload-file-modal" class="ui modal">
+      <i class="close icon"></i>
+      <div class="header">
+        Upload File
+      </div>
+      <div class="content">
+        <div class="ui form">
+          <div class="field">
+            <label>File</label>
+            <input @change="handleUploadFileChanged(event)" id="file-input" ref="file-input" type="file" name="file">
+          </div>
+          <div class="field">
+            <label>Custom Filename</label>
+            <input v-model="newFileName" type="text" name="filename">
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="ui cancel button">Close</button>
+        <button @click="handleUploadFile()" class="ui positive button">Upload</button>
+      </div>
+    </div>
+
+    <div id="file-detail-modal" class="ui modal">
+      <i class="close icon"></i>
+      <div class="header">
+        File Detail
+      </div>
+      <div class="image content">
+
+        <div v-if="selectedFile.isImage" class="ui massive image">
+          <img class="ui image" :src="selectedFile.src">
+        </div>
+
+        <div class="description full-width">
+          <div class="ui form">
+            <div class="field">
+              <label>File ID</label>
+              <input v-model="selectedFile._id" type="text" readonly>
+            </div>
+            <div class="field">
+              <label>Filename</label>
+              <input v-model="selectedFile.filename" type="text" readonly>
+            </div>
+            <div class="field">
+              <label>Size</label>
+              <input v-model="selectedFile.length" type="text" readonly>
+            </div>
+            <div class="field">
+              <label>Type</label>
+              <input v-model="selectedFile.metadata.contentType" type="text" readonly>
+            </div>
+            <div class="field">
+              <label>URL</label>
+              <input v-model="selectedFile.url" type="text" readonly>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="actions">
+        <button @click="handleDeleteFile()" class="ui negative button">Delete</button>
+        <a class="ui primary button" :href="selectedFile.url" download>Download</a>
+        <button class="ui cancel button">Close</button>
+      </div>
+    </div>
+
+  </div>
+</script>
+
+<script type="module">
+import * as Api from '/admin/js/api.js';
+import { readableFileSize } from '/admin/js/vue-filters.js';
+
+const vm = new Vue({
+    el: '#files-app',
+    template: '#files-app-template',
+    filters: {
+      readableFileSize,
+    },
+
+    data() {
+      return {
+        loading: false,
+        files: [],
+        selectedFileId: '',
+        newFileName: '',
+      };
+    },
+
+    computed: {
+      selectedFile() {
+        if (!this.selectedFileId) {
+          return {
+            metadata: '',
+          }
+        }
+        let file = this.files.find(f => (f._id === this.selectedFileId));
+        file = { ...file }; // copy
+        if (file && file.metadata
+        && file.metadata.contentType
+        && file.metadata.contentType.startsWith('image/')) {
+          file.isImage = true;
+          file.src = file.url;
+        }
+        return file;
+      }
+    },
+
+    created() {
+      this.fetchFiles();
+    },
+
+    mounted() {
+      this.setModals();
+    },
+
+    methods: {
+      async fetchFiles() {
+        const res = await Api.getFileList();
+        this.files = res.jsonBody.files;
+      },
+
+      setModals() {
+        $('#file-detail-modal').modal({
+          onHidden: () => {
+            this.selectedFileId = '';
+          }
+        });
+      },
+
+      handleClickFileItem(fileId) {
+        this.selectedFileId = fileId;
+        this.toggleFileDetailModal();
+      },
+
+      handleUploadFileChanged(event) {
+        // const files = event.target.files;
+        const files = this.$refs['file-input'].files;
+        const [file] = files;
+        const { name, type } = file;
+        this.newFileName = name;
+      },
+
+      async handleUploadFile() {
+        this.loading = true;
+        const files = this.$refs['file-input'].files;
+        const [file] = files;
+        await Api.uploadFile(file, this.newFileName);
+        await this.fetchFiles();
+        this.loading = false;
+      },
+
+      async handleDeleteFile() {
+        this.loading = true;
+        await Api.deleteFile(this.selectedFile.filename);
+        await this.fetchFiles();
+        this.loading = false;
+      },
+
+      toggleUploadFileModal() {
+        $('#upload-file-modal').modal('toggle');
+      },
+  
+      toggleFileDetailModal() {
+        $('#file-detail-modal').modal('toggle');
+      },
+    },
+});
+</script>

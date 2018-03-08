@@ -1,0 +1,16 @@
+body {
+  /* solarized-light background color */
+  background-color: #fdf6e3;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.inline {
+  display: inline;
+}
+
+.full-width {
+  width: 100% !important;
+}

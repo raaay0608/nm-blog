@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<%- include("components/head-content") %>
+
+<%- include("components/navbar") %>
+
+<div id="posts-app"></div>
+
+<script type="text/x-template" id="posts-app-template">
+  <div id="posts-app" class="ui container">
+
+    <div v-bind:class="{ active: loading }" class="ui inverted dimmer">
+      <div class="ui text loader">Loading</div>
+    </div>
+
+    <h1>Posts</h1>
+    <button @click="toggleNewPostModal()" class="ui button">New</button>
+
+    <table class="ui selectable table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Tags</th>
+          <!-- <th>Status</th> -->
+          <th>Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="post in posts" :key="post._id" @click="handleEditPost(post._id)" class="pointer">
+          <td>{{ post._id }}</td>
+          <td>{{ post.title }}</td>
+          <td>
+            <div v-for="category in post.categories" class="ui label">{{ category.name }}</div>
+          </td>
+          <td>
+            <div v-for="tag in post.tags" class="ui label">{{ tag.name }}</div>
+          </td>
+          <!-- <td>{{ post.status }}</td> -->
+          <td>{{ post.createdAt | iso2LocaleDate }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+      </tfoot>
+    </table>
+
+    <div id="create-post-modal" class="ui small modal">
+      <i class="close icon"></i>
+      <div class="header">
+        New Post
+      </div>
+      <div class="content">
+        <div class="ui form">
+          <div class="required field">
+            <label>Title</label>
+            <input type="text" name="title" placeholder="Title" v-model="newPost.title">
+          </div>
+          <div class="required field">
+            <label>Slug</label>
+            <input type="text" name="slug" placeholder="Slug" v-model="newPost.slug">
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui black deny button">
+          Cancel
+        </div>
+        <div @click="handleCreatePost()" class="ui positive right button">
+          Create
+        </div>
+      </div>
+    </div>
+
+  </div>
+</script>
+
+<script type="module">
+import * as Api from '/admin/js/api.js';
+import { iso2LocaleDate } from '/admin/js/vue-filters.js';
+
+
+const vm = new Vue({
+  el: '#posts-app',
+  template: '#posts-app-template',
+  filters: {
+    iso2LocaleDate,
+  },
+
+  data() {
+    return {
+      loading: true,
+      posts: [],
+      newPost: {
+        title: '',
+        slug: '',
+      }
+    };
+  },
+
+  async created() {
+    this.loading = true;
+    this.fetchPosts();
+    this.loading = false;
+  },
+
+  methods: {
+    initData() {
+      this.newPost = { title: '', slug: '' };
+    },
+
+    async fetchPosts() {
+      const res = await Api.getPosts();
+      const { posts } = res.jsonBody;
+      this.posts = posts;
+    },
+
+    async handleCreatePost() {
+      this.loading = true
+      const data = { ...this.newPost };
+      const res = await Api.createPost(data);
+      const postId = res.jsonBody.post._id;
+      this.loading = false;
+      // navigate to post edit page
+      window.location.assign(`/admin/posts/${postId}`);
+    },
+
+    handleEditPost(postId) {
+      window.location.assign(`/admin/posts/${postId}`);
+    },
+
+    toggleNewPostModal() {
+      $('#create-post-modal').modal('toggle');
+    },
+  },
+});
+</script>

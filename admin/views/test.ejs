@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<%- include("components/head-content") %>
+
+<%- include("components/navbar") %>
+
+<div class="ui container">
+  <h1>Playground</h1>
+  <div id="demo"></div>
+</div>
+
+<script type="text/x-template" id="app">
+  <div id="demo">
+    <h2>List Demo</h2>
+    <p v-for="c in contents" :key="c.id">{{ c.id }} | {{ c.name }}</p>
+  </div>
+</script>
+
+<script>
+new Vue({
+  el: '#demo',
+  template: '#app',
+  data() {
+    return {
+      loading: true,
+      contents: [{ name: 'test', id: 12 }],
+    };
+  },
+  created() {
+    console.log('created');
+  },
+  mounted() {
+    console.log('mounted');
+  }
+})
+</script>

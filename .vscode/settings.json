@@ -1,0 +1,22 @@
+{
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.renderIndentGuides": false,
+
+    "cSpell.words": [
+        "authsource",
+        "bodyparser",
+        "bson",
+        "error",
+        "id",
+        "kcors",
+        "koa",
+        "middlewares",
+        "mimetype",
+        "nm-blog",
+        "request",
+        "unprocessable",
+        "upserted",
+        "validators"
+    ]
+}

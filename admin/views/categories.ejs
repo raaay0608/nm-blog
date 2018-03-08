@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<%- include("components/head-content") %>
+
+<%- include("components/navbar") %>
+
+<div id="categories-app"></div>
+
+<script type="text/x-template" id="categories-app-template">
+  <div id="categories-app" class="ui container">
+
+    <div v-bind:class="{ active: loading }" class="ui inverted dimmer">
+      <div class="ui text loader">Loading</div>
+    </div>
+    <h1>categories</h1>
+    <button @click="toggleCreateCategoryModal()" class="ui button">New</button>
+
+    <table class="ui selectable table">
+      <thead>
+        <tr>
+          <th>_id</th>
+          <th>Slug</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Parent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="category in categories" :key="category._id" @click="handleShowEditCategoryModal(category._id)" class="pointer">
+          <td>{{ category._id }}</td>
+          <td>{{ category.slug }}</td>
+          <td>{{ category.name }}</td>
+          <td>{{ category.description }}</td>
+          <td>{{ category.parent && category.parent.name }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+      </tfoot>
+    </table>
+
+    <!-- create category modal -->
+    <div id="create-category-modal" class="ui small modal">
+      <i class="close icon"></i>
+      <div class="header">
+        Create Category
+      </div>
+      <div class="content">
+        <div class="ui form">
+          <div class="required field">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Name" v-model="newCategory.name">
+          </div>
+          <div class="required field">
+            <label>Slug</label>
+            <input type="text" name="slug" placeholder="Slug" v-model="newCategory.slug">
+          </div>
+          <div class="field">
+            <label>Description</label>
+            <textarea v-model="newCategory.description"></textarea>
+          </div>
+          <div class="field">
+            <label>Parent</label>
+            <select v-model="newCategory.parent._id" class="ui fluid search dropdown nullable">
+              <option value=""></option>
+              <option v-for="category in categories" :key="category._id" :value="category._id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui black deny button">
+          Cancel
+        </div>
+        <div @click="handleCreateCategory()" class="ui positive right button">
+          Create
+        </div>
+      </div>
+
+    </div>
+
+    <!-- edit category modal -->
+    <div id="edit-category-modal" class="ui small modal">
+      <i class="close icon"></i>
+      <div class="header">
+        Edit Category {{ targetCategory._id }}
+      </div>
+      <div class="content">
+        <div class="ui form">
+          <div class="required field">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Name" v-model="targetCategory.name">
+          </div>
+          <div class="required field">
+            <label>Slug</label>
+            <input type="text" name="slug" placeholder="Slug" v-model="targetCategory.slug">
+          </div>
+          <div class="field">
+            <label>Description</label>
+            <textarea v-model="targetCategory.description"></textarea>
+          </div>
+          <div class="field">
+            <label>Parent</label>
+            <select v-model="targetCategory.parent._id" class="ui fluid search dropdown nullable">
+              <option value=""></option>
+              <option v-for="category in categories" :key="category._id" :value="category._id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div @click="handleDeleteCategory()" class="ui negative left floated button">
+          Delete
+        </div>
+        <div class="ui black deny button">
+          Cancel
+        </div>
+        <div @click="handleUpdateCategory()" class="ui positive right button">
+          Update
+        </div>
+      </div>
+    </div>
+
+  </div>
+</script>
+
+<script type="module">
+import * as Api from '/admin/js/api.js';
+
+const vm = new Vue({
+  el: '#categories-app',
+  template: '#categories-app-template',
+
+  data() {
+    return {
+      loading: true,
+      categories: [],
+      newCategory: {
+        name: '',
+        slug: '',
+        description: '',
+        parent: {
+          _id: '',
+        },
+      },
+      targetCategory: {
+        name: '',
+        slug: '',
+        description: '',
+        parent: {
+          _id: '',
+        },
+      }
+    };
+  },
+
+  async created() {
+    this.loading = true;
+    this.initData();
+    await this.fetchCategories();
+    this.loading = false;
+  },
+
+  async mounted() {
+    this.initUIElements();
+  },
+
+  methods: {
+    initUIElements() {
+      $('.ui.dropdown.nullable').dropdown({
+        placeholder:false, // allow empty option
+      });
+    },
+
+    initData() {
+      this.newCategory = {
+        name: '',
+        slug: '',
+        description: '',
+        parent: {
+          _id: '',
+        },
+      },
+      this.targetCategory = {
+        name: '',
+        slug: '',
+        description: '',
+        parent: {
+          _id: '',
+        },
+      }
+    },
+
+    async fetchCategories() {
+      const res = await Api.getCategories();
+      const { categories } = res.jsonBody;
+      this.categories = categories;
+    },
+
+    async handleCreateCategory() {
+      this.loading = true;
+      const data = { ...this.newCategory };
+      if (!data.parent || !data.parent._id) {
+        data.parent = null;
+      }
+      const res = await Api.createCategory(data);
+      this.initData();
+      await this.fetchCategories();
+      this.loading = false;
+    },
+
+    async handleUpdateCategory() {
+      this.loading = true;
+      const data = { ...this.targetCategory };
+      if (!data.parent || !data.parent._id) {
+        data.parent = null;
+      }
+      const _id = data._id;
+      delete data._id;
+      await Api.updateCategory(_id, data);
+      this.initData();
+      await this.fetchCategories();
+      this.loading = false;
+    },
+
+    async handleDeleteCategory() {
+      this.loading = true;
+      const _id = this.targetCategory._id;
+      await Api.deleteCategory(_id);
+      this.initData();
+      await this.fetchCategories();
+      this.loading = false;
+    },
+
+    handleShowEditCategoryModal(_id) {
+      const target = this.categories.find(c => (c._id === _id));
+      this.targetCategory = { ...target };
+      if (!this.targetCategory.parent) {
+        this.targetCategory.parent = { _id: '' };
+      }
+      this.toggleEditCategoryModal();
+    },
+
+    toggleCreateCategoryModal() {
+      $('#create-category-modal').modal('toggle');
+    },
+
+    toggleEditCategoryModal() {
+      $('#edit-category-modal').modal('toggle');
+    },
+  },
+});
+</script>

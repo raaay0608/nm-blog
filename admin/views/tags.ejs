@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<%- include("components/head-content") %>
+
+<%- include("components/navbar") %>
+
+<div id="tags-app"></div>
+
+<script type="text/x-template" id="tags-app-template">
+  <div id="tags-app" class="ui container">
+    <div v-bind:class="{ active: loading }" class="ui inverted dimmer">
+      <div class="ui text loader">Loading</div>
+    </div>
+    <h1>Tags</h1>
+    <button v-on:click="toggleCreateTagModal()" class="ui button">New</button>
+    <table class="ui selectable table">
+      <thead>
+        <tr>
+          <th>_id</th>
+          <th>Slug</th>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="tag in tags" :key="tag._id" @click="handleOpenEditModal(tag._id)" class="pointer">
+          <td>{{ tag._id }}</td>
+          <td>{{ tag.slug }}</td>
+          <td>{{ tag.name }}</td>
+          <td>{{ tag.description }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+      </tfoot>
+    </table>
+
+    <!-- new tag modal -->
+    <div id="create-tag-modal" class="ui small modal">
+      <i class="close icon"></i>
+      <div class="header">
+        New Tag
+      </div>
+      <div class="content">
+        <div class="ui form">
+          <div class="required field">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Name" v-model="newTag.name">
+          </div>
+          <div class="required field">
+            <label>Slug</label>
+            <input type="text" name="slug" placeholder="Slug" v-model="newTag.slug">
+          </div>
+          <div class="required field">
+            <label>Description</label>
+            <textarea v-model="newTag.description"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui black deny button">
+          Cancel
+        </div>
+        <div @click="handleCreateTag()" class="ui positive right button">
+          Create
+        </div>
+      </div>
+    </div>
+
+    <div id="edit-tag-modal" class="ui small modal">
+      <i class="close icon"></i>
+      <div class="header">
+        Edit Tag "{{ targetTag._id }}""
+      </div>
+      <div class="content">
+        <div class="ui form">
+          <div class="required field">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Name" v-model="targetTag.name">
+          </div>
+          <div class="required field">
+            <label>Slug</label>
+            <input type="text" name="slug" placeholder="Slug" v-model="targetTag.slug">
+          </div>
+          <div class="required field">
+            <label>Description</label>
+            <textarea v-model="targetTag.description"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div @click="handleDeleteTag()" class="ui negative left floated button">
+          Delete
+        </div>
+        <div class="ui black deny button">
+          Cancel
+        </div>
+        <div @click="handleEditTag()" class="ui positive right button">
+          Update
+        </div>
+      </div>
+    </div>
+
+  </div>
+</script>
+
+<script type="module">
+import * as Api from '/admin/js/api.js';
+
+const vm = new Vue({
+  el: '#tags-app',
+  template: '#tags-app-template',
+  data() {
+    return {
+      loading: true,
+      tags: [],
+      newTag: {
+        name: '',
+        slug: '',
+        description: '',
+      },
+      targetTag: {
+        name: '',
+        slug: '',
+        description: '',
+      },
+    };
+  },
+  async created() {
+    this.loading = true;
+    this.initData();
+    await this.fetchTags();
+    this.loading = false;
+  },
+  methods: {
+    async fetchTags() {
+      const res = await Api.getTags();
+      this.tags = res.jsonBody.tags;
+    },
+
+    initData() {
+      this.newTag = {
+        name: '',
+        slug: '',
+        description: '',
+      };
+      this.targetTag = {
+        name: '',
+        slug: '',
+        description: '',
+      };
+    },
+
+    async handleCreateTag() {
+      this.loading = true;
+      const data = { ...this.newTag };
+      await Api.createTag(data);
+      this.initData();
+      await this.fetchTags();
+      this.loading = false;
+    },
+
+    async handleEditTag() {
+      this.loading = true;
+      const data = { ...this.targetTag };
+      const _id = data._id;
+      delete data._id;
+      await Api.updateTag(_id, data);
+      await this.fetchTags();
+      this.loading = false;
+    },
+
+    async handleDeleteTag() {
+      this.loading = true;
+      const _id = this.targetTag._id;
+      await Api.deleteTag(_id);
+      await this.fetchTags();
+      this.loading = false;
+    },
+
+    handleOpenEditModal(_id) {
+      const found = this.tags.find(t => (t._id === _id));
+      this.targetTag = { ...found };
+      this.toggleEditTagModal();
+    },
+
+    toggleEditTagModal() {
+      $('#edit-tag-modal').modal('toggle');
+    },
+
+    toggleCreateTagModal() {
+      $('#create-tag-modal').modal('toggle');
+    },
+  },
+});
+</script>
+

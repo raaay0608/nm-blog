@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<%- include("components/common-head") %>
+
+<div class="ui container">
+
+  <%# top menu %>
+  <%- include("components/head-menu") %>
+
+  <%# tag info %>
+  <% if (locals.tag) { %>
+  <div class="ui card">
+    <div class="content">
+      <div class="ui ribbon label">标签：<%= tag.name %></div>
+      <span><%= tag.description %></span>
+    </div>
+  </div>
+  <% } %>
+
+  <%# category info %>
+  <% if (locals.category) { %>
+  <div class="ui card">
+    <div class="content">
+      <div class="ui ribbon label">分类：<%= category.name %></div>
+      <span><%= category.description %></span>
+    </div>
+  </div>
+  <% } %>
+  
+  <%# post list %>
+  <div class="posts">
+    <% for (const post of posts) { %>
+      <%- include('components/post-feed', { post }) %>
+    <% } %>
+  </div>
+
+  <%# pagination %>
+  <%- include('components/pagination') %>
+
+
+</div>
