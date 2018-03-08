@@ -18,21 +18,12 @@ function isConnected() {
 /**
  * connect
  */
-async function connect({
-  host = process.env.DB_HOST || 'localhost',
-  port = process.env.DB_CLIENT || 27017,
-  user = process.env.DB_USER || null,
-  password = process.env.DB_PASSWORD || null,
-  authSource = process.env.DB_AUTHSOURCE || null,
-} = {}) {
+async function connect(url = process.env.DB_URL) {
   try {
     if (isConnected()) {
       return;
     }
-    const server = new Server(host, port);
-    const options = { user, password, authSource };
-
-    _client = await new MongoClient(server, options).connect();
+    _client = await MongoClient.connect(url);
   } catch (err) {
     throw err; // may `process.exit()`
   }
