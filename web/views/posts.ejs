@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 
 <%- include("components/common-head") %>
+<title>
+  <% if (locals.tag) { %>
+    <%= tag.name %> -
+  <% } %>
+  <% if (locals.category) { %>
+    <%= category.name %> -
+  <% } %>
+  <%= siteOptions.SITE_NAME %>
+</title>
+
 
 <div class="ui container">
 

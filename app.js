@@ -1,6 +1,8 @@
 const dotenv = require('dotenv');
 const Koa = require('koa');
-const KoaGenericSession = require('koa-generic-session');
+// const KoaGenericSession = require('koa-generic-session');
+const KoaSessionMinimal = require('koa-session-minimal');
+const KoaGenericSessionMongo = require('koa-generic-session-mongo');
 const KoaMount = require('koa-mount');
 const KoaResponseTime = require('koa-response-time');
 const KCors = require('kcors');
@@ -37,7 +39,13 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 }
 
 
-app.use(KoaGenericSession());
+app.use(KoaSessionMinimal({
+  store: new KoaGenericSessionMongo({
+    url: process.env.DB_URL,
+  }),
+}));
+
+
 app.use(async (ctx, next) => {
   if (ctx.session.admin === true) {
     ctx.state.admin = true;
@@ -55,7 +63,7 @@ app.use(KoaMount('/admin', adminApp));
 app.use(KoaMount('/', webApp));
 
 
-const server = app.listen(3000, () => {
+const server = app.listen(process.env.PORT || 3000, () => {
   app.emit('listening');
 });
 
@@ -68,3 +76,4 @@ const server = app.listen(3000, () => {
 
 module.exports.app = app;
 module.exports.server = server;
+
